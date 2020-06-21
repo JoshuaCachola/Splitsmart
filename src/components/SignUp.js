@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Mutation } from 'react-apollo';
+import { useMutation } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 import { AUTH_TOKEN } from '../utils/constants';
 
 // mutation to create a new user
 const SIGNUP_MUTATION = gql`
-  mutation SignupMutation(
-    $username: String!, $firstName: String!, $lastName: String!,
-    $email: String!, $password: String!) {
-    signup(username: $username, firstName: $firstName, lastName: $lastName,
+  mutation SignUpMutation(
+    $firstName: String!, $lastName: String!, $email: String!,
+    $password: String!) {
+    signUp(firstName: $firstName, lastName: $lastName,
       email: $email, password: $password) {
       token
     }
@@ -16,20 +16,36 @@ const SIGNUP_MUTATION = gql`
 `;
 
 const SignUp = ({ history }) => {
-  const [username, setUsername] = useState(''),
-    [firstName, setFirstName] = useState(''),
+  const [firstName, setFirstName] = useState(''),
     [lastName, setLastName] = useState(''),
     [email, setEmail] = useState(''),
     [password, setPassword] = useState(''),
     [confirmPassword, setConfirmPassword] = useState('');
 
-  const confirm = async data => {
-    // const { token } =
-  };
+  const [signUp, { data }] = useMutation(SignUpMutation);
 
-  const saveJWTToken = token => {
-    localStorage.setItem(AUTH_TOKEN, token)
-  };
+  const handleSignUp = e => {
+    e.preventDefault();
+    if (password === confirmPassword) {
+      signUp({
+        variables: {
+          first_name: firstName,
+          last_name: lastName,
+          email,
+          password
+        }
+      })
+    } else {
+      alert('Passwords do not match...');
+    }
+  }
+  // const confirm = async data => {
+  //   // const { token } =
+  // };
+
+  // const saveJWTToken = token => {
+  //   localStorage.setItem(AUTH_TOKEN, token)
+  // };
 
   return (
     <>
@@ -71,23 +87,7 @@ const SignUp = ({ history }) => {
           required
         />
         <div>
-          <Mutation
-            mutation={SIGNUP_MUTATION}
-            variables={{
-              username,
-              firstName,
-              lastName,
-              email,
-              password
-            }}
-            onCompleted={data => confirm(data)}
-          >
-            {mutation => (
-              <div className="pointer mr2 button" onClick={mutation}>
-                {login ? 'login' : 'create account'}
-              </div>
-            )}
-          </Mutation>
+
         </div>
       </form>
     </>
