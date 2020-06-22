@@ -1,19 +1,7 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
-import { AUTH_TOKEN } from '../utils/constants';
-
-// mutation to create a new user
-const SIGNUP_MUTATION = gql`
-  mutation SignUpMutation(
-    $firstName: String!, $lastName: String!, $email: String!,
-    $password: String!) {
-    signUp(firstName: $firstName, lastName: $lastName,
-      email: $email, password: $password) {
-      token
-    }
-  }
-`;
+import { AUTH_TOKEN, USER_ID } from '../utils/constants';
+import { CREATE_USER } from '../gql/mutations';
 
 const SignUp = ({ history }) => {
   const [firstName, setFirstName] = useState(''),
@@ -22,15 +10,15 @@ const SignUp = ({ history }) => {
     [password, setPassword] = useState(''),
     [confirmPassword, setConfirmPassword] = useState('');
 
-  const [signUp, { data }] = useMutation(SignUpMutation);
+  const [createUser, { data }] = useMutation(CREATE_USER);
 
   const handleSignUp = e => {
     e.preventDefault();
     if (password === confirmPassword) {
-      signUp({
+      createUser({
         variables: {
-          first_name: firstName,
-          last_name: lastName,
+          firstName,
+          lastName,
           email,
           password
         }
@@ -38,24 +26,19 @@ const SignUp = ({ history }) => {
     } else {
       alert('Passwords do not match...');
     }
-  }
-  // const confirm = async data => {
-  //   // const { token } =
-  // };
 
-  // const saveJWTToken = token => {
-  //   localStorage.setItem(AUTH_TOKEN, token)
-  // };
+    setJWTToken(data);
+    // history.push()
+  }
+
+  const setJWTToken = ({ createUser }) => {
+    localStorage.setItem(AUTH_TOKEN, createUser.authToken);
+    localStorage.setItem(USER_ID, createUser.id);
+  };
 
   return (
     <>
       <form onSubmit={handleSignUp}>
-        <label>Username</label>
-        <input
-          type='text'
-          onChange={e => setUsername(e.target.value)}
-          required
-        />
         <label>First name</label>
         <input
           type='text'
@@ -87,7 +70,7 @@ const SignUp = ({ history }) => {
           required
         />
         <div>
-
+          <button type='submit'>Sign Up</button>
         </div>
       </form>
     </>

@@ -1,34 +1,26 @@
 import React, { useState } from 'react';
 import { useMutation } from '@apollo/react-hooks';
-import gql from 'graphql-tag';
 
-import { AUTH_TOKEN } from '../utils/constants';
+import { AUTH_TOKEN, USER_ID } from '../utils/constants';
+import { LOGIN_USER } from '../gql/mutations';
 
-const LOGIN_MUTATION = gql`
-  mutation LoginMutation($email: String!, $password: String!) {
-    logIn(email: $email, password: $password) {
-      token
-    }
-  }
-`;
-
-const Login = () => {
+const Login = ({ history }) => {
   const [email, setEmail] = useState(''),
     [password, setPassword] = useState('');
 
-  const [logIn, { data }] = useMutation(LOGIN_MUTATION);
+  const [logIn, { data }] = useMutation(LOGIN_USER);
   const handleLogIn = e => {
     e.preventDefault();
     logIn({ variables: { email, password } })
+    setJWTToken(data);
   };
 
-  // const confirm = async data => {
-  //   // const { token } =
-  // };
+  const setJWTToken = ({ loginUser }) => {
+    localStorage.setItem(AUTH_TOKEN, loginUser.authToken);
+    localStorage.setItem(USER_ID, loginUser.id);
 
-  // const saveJWTToken = token => {
-  //   localStorage.setItem(AUTH_TOKEN, token)
-  // };
+  };
+
   return (
     <>
       <form onSubmit={handleLogIn}>
