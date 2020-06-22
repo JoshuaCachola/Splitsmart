@@ -1,16 +1,30 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/react-hooks';
+import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import { AUTH_TOKEN, USER_ID } from '../utils/constants';
 import { CREATE_USER } from '../gql/mutations';
 
 const SignUp = ({ history }) => {
+  const client = useApolloClient();
   const [firstName, setFirstName] = useState(''),
     [lastName, setLastName] = useState(''),
     [email, setEmail] = useState(''),
     [password, setPassword] = useState(''),
     [confirmPassword, setConfirmPassword] = useState('');
 
-  const [createUser, { data }] = useMutation(CREATE_USER);
+  const [createUser, { loading, error }] = useMutation(CREATE_USER, {
+    onCompleted({ createUser }) {
+      console.log(createUser);
+      localStorage.setItem(AUTH_TOKEN, createUser.authToken);
+      localStorage.setItem(USER_ID, createUser.user.id);
+      client.writeData({ data: { isLoggedIn: true } });
+
+      // if loading or error
+      // if (loading) return <Loading />;
+      // if (error) return <p>An error occurred</p>;
+
+      // return <LoginForm login={login} />;
+    }
+  });
 
   const handleSignUp = e => {
     e.preventDefault();
@@ -22,19 +36,13 @@ const SignUp = ({ history }) => {
           email,
           password
         }
-      })
+      });
     } else {
       alert('Passwords do not match...');
     }
-
-    setJWTToken(data);
     // history.push()
   }
 
-  const setJWTToken = ({ createUser }) => {
-    localStorage.setItem(AUTH_TOKEN, createUser.authToken);
-    localStorage.setItem(USER_ID, createUser.id);
-  };
 
   return (
     <>

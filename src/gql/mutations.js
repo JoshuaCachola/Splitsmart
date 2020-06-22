@@ -14,6 +14,9 @@ export const CREATE_USER = gql`
     $password: String!) {
     createUser(firstName: $firstName, lastName: $lastName,
       email: $email, password: $password) {
+      user {
+        id
+      }
       authToken
     }
   }
@@ -22,7 +25,21 @@ export const CREATE_USER = gql`
 export const ADD_FRIEND = gql`
   mutation AddFriend($userId: Int!, $friendId: Int!) {
     addFriend(userId: $userId, friendId: $friendId) {
-      id
+      addFriendSuccess,
+      addUsersFriendSuccess
+    }
+  }
+`;
+
+export const CREATE_EXPENSE = gql`
+  mutation CREATE_EXPENSE($userId: Int!, $amount: Float!, $description: String!) {
+    createExpense(userId: $userId, amount: $amount, description: $description) {
+      expense {
+        amount,
+        description,
+        createdAt,
+        isSettled
+      }
     }
   }
 `;

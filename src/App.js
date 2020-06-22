@@ -8,6 +8,7 @@ import ProtectedRoute from './ProtectedRoute';
 import SignUp from './components/SignUp';
 import LogIn from './components/LogIn'
 import Dashboard from './components/dashboard/Dashboard';
+import CreateExpense from './components/dashboard/CreateExpense';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
           <Route path='/signup' exact={true} component={SignUp} />
           <Route path='/login' exact={true} component={LogIn} />
           <Route path='/dashboard' exact={true} component={Dashboard} />
+          <Route path='/create-expense' exact={true} component={CreateExpense} />
           <Route path='/' exact={true} component={Homepage} />
         </Switch>
       </Router>
