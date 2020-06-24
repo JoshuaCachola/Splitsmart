@@ -1,6 +1,6 @@
 import { createMuiTheme } from '@material-ui/core/styles';
 
-const theme = createMuiTheme({
+export const theme = createMuiTheme({
   typography: {
     fontFamily: 'Lato, Helvetica Neue, Helvetica, Arial, sans-serif'
   },

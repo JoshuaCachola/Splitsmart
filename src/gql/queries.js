@@ -24,7 +24,10 @@ export const USER_SEARCH = gql`
 export const GET_FRIENDS = gql`
   query GetFriends($friend1Id: Int!) {
     friends(friend1Id: $friend1Id) {
-      friend2Id
+      friend2 {
+        firstName,
+        lastName
+      }
     }
   }
 `;

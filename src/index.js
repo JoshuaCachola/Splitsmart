@@ -6,6 +6,8 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import api from './utils/utils';
 import configureStore from './redux-store/configureStore';
+import { theme } from './theme';
+import { ThemeProvider } from '@material-ui/styles';
 
 import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
@@ -40,7 +42,9 @@ const store = configureStore();
 ReactDOM.render(
   <ApolloProvider client={client}>
     <Provider store={store}>
-      <App />
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
     </Provider>
   </ApolloProvider>,
   document.getElementById('root')

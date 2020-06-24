@@ -8,31 +8,28 @@ const SplitExpense = () => {
   // useEffect(() => {
   //   console.log(friends);
   // }, [friends])
-  console.log(friends);
+  // console.log(friends);
   return (
     <>
       <h1>Split Expense</h1>
-      {friends &&
-        friends.map((friend, i) => {
-          return (
-            <div key={i}>
-              <table>
-                <thead>
-                  <th>First Name</th>
-                  <th>Last Name</th>
-                  <th>Email</th>
-                </thead>
-                <tbody>
-                  <td>{friend.firstName}</td>
-                  <td>{friend.lastName}</td>
-                  <td>{friend.email}</td>
+      <table>
+        <tr>
+          <th>First Name</th>
+          <th>Last Name</th>
+        </tr>
+        <tbody>
+          {friends &&
+            friends.map((friend, i) => {
+              return (
+                <tr key={i}>
+                  <td>{friend.friend2.firstName}</td>
+                  <td>{friend.friend2.lastName}</td>
                   <td><Button>Split</Button></td>
-                </tbody>
-              </table>
-            </div>
-          )
-        })
-      }
+                </tr>
+              )
+            })}
+        </tbody>
+      </table>
     </>
   );
 };

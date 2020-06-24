@@ -26,10 +26,21 @@ const Topbar = () => {
       </Box>
       <Box display='flex' justifyContent='flex-end'>
         <Box>
-          <Button onClick={handleRouteToAddExpense}>Add an expense</Button>
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={handleRouteToAddExpense}
+          >
+            Add an expense
+          </Button>
         </Box>
         <Box>
-          <Button>Settle up</Button>
+          <Button
+            variant='contained'
+            color='primary'
+          >
+            Settle up
+          </Button>
         </Box>
       </Box>
     </Box>
