@@ -4,6 +4,7 @@ import { useMutation } from '@apollo/react-hooks';
 
 import { CREATE_EXPENSE } from '../../gql/mutations';
 import { USER_ID } from '../../utils/constants';
+import history from '../../utils/history';
 
 const useStyles = makeStyles({
   expenseForm: {
@@ -11,25 +12,29 @@ const useStyles = makeStyles({
   }
 });
 
-const CreateExpense = ({ history }) => {
+const CreateExpense = () => {
   const [description, setDescription] = useState('');
-  const [amount, setAmount] = useState(0.00);
+  const [amount, setAmount] = useState('');
   const [createExpense, _] = useMutation(CREATE_EXPENSE);
 
-  const handleCreateExpense = e => {
-    e.preventDefault();
+  const handleCreateExpense = () => {
+    // e.preventDefault();
+    console.log(description, amount);
     createExpense({
-      description,
-      amount,
-      userId: localStorage.getItem(USER_ID)
-    })
+      variables: {
+        description,
+        amount,
+        userId: parseInt(localStorage.getItem(USER_ID))
+      }
+    });
+    history.push('/dashboard');
   };
 
   const classes = useStyles();
   return (
     <>
       <h1>CreateExpense</h1>
-      <form onSubmit={handleCreateExpense}>
+      <form>
         <label>Description</label>
         <input
           type='text'
@@ -40,9 +45,10 @@ const CreateExpense = ({ history }) => {
         <input
           type='text'
           value={amount}
+          placeholder='$0.00'
           onChange={e => setAmount(e.target.value)}
         />
-        <Button type='submit'>Create Expense</Button>
+        <Button type='button' onClick={handleCreateExpense}>Create Expense</Button>
       </form>
     </>
   );

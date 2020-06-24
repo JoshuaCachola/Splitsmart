@@ -3,7 +3,9 @@ import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import { AUTH_TOKEN, USER_ID } from '../utils/constants';
 import { CREATE_USER } from '../gql/mutations';
 
-const SignUp = ({ history }) => {
+import history from '../utils/history';
+
+const SignUp = () => {
   const client = useApolloClient();
   const [firstName, setFirstName] = useState(''),
     [lastName, setLastName] = useState(''),
@@ -40,7 +42,7 @@ const SignUp = ({ history }) => {
     } else {
       alert('Passwords do not match...');
     }
-    // history.push()
+    history.push('/dashboard')
   }
 
 

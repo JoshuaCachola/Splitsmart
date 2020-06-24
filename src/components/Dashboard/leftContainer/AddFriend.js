@@ -5,8 +5,9 @@ import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 
 import { handleShowAddFriends } from '../../../redux-store/actions';
 import { USER_SEARCH } from '../../../gql/queries';
-import { ADD_FRIEND } from '../../../gql/mutations';
+import { FRIEND_REQUEST } from '../../../gql/mutations';
 import { USER_ID } from '../../../utils/constants';
+
 const useStyles = makeStyles({
   container: {
 
@@ -17,7 +18,7 @@ const AddFriend = ({ isShowingAddFriend }) => {
   const dispatch = useDispatch();
   const [email, setEmail] = useState('');
   const [getUser, { loading, error, data }] = useLazyQuery(USER_SEARCH);
-  const [addFriend, _] = useMutation(ADD_FRIEND);
+  const [friendRequest, _] = useMutation(FRIEND_REQUEST);
 
   const handleAddFriendContainer = e => {
     e.preventDefault();
@@ -28,10 +29,10 @@ const AddFriend = ({ isShowingAddFriend }) => {
   }
 
   const handleAddFriend = () => {
-    addFriend({
+    friendRequest({
       variables: {
-        userId: parseInt(localStorage.getItem(USER_ID)),
-        friendId: parseInt(data.user.id)
+        friend1Id: parseInt(localStorage.getItem(USER_ID)),
+        friend2Id: parseInt(data.user.id)
       }
     })
   };

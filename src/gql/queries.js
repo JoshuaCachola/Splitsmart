@@ -1,12 +1,14 @@
 import gql from 'graphql-tag';
 
-// export const ACTIVE_EXPENSES = gql`
-//   query GetActiveExpenses() {
-//     getActiveExpenses() {
-
-//     }
-//   }
-// `;
+export const ACTIVE_EXPENSES = gql`
+  query GetActiveExpenses($userId: Int!) {
+    activeExpenses(userId: $userId) {
+      description,
+      amount,
+      createdAt
+    }
+  }
+`;
 
 export const USER_SEARCH = gql`
   query UserSearch($email: String!) {
@@ -20,12 +22,9 @@ export const USER_SEARCH = gql`
 `;
 
 export const GET_FRIENDS = gql`
-  query GetFriends($userId: Int!) {
-    friends(userId: $userId) {
-      user {
-        firstName,
-        lastName
-      }
+  query GetFriends($friend1Id: Int!) {
+    friends(friend1Id: $friend1Id) {
+      friend2Id
     }
   }
 `;

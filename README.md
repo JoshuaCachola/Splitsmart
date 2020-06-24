@@ -1,6 +1,6 @@
 # GoodFellas
 
-One spot need for making any type of payment. Let GoodFellas be the middleman for all of your transactions.
+One stop spot for making any type of payment. Let GoodFellas be the middleman for your future transactions.
 
 ## MVP List
 - users will be able to create expenses (bills)

@@ -5,17 +5,13 @@ import { useQuery } from '@apollo/react-hooks';
 
 import AddFriend from './AddFriend';
 import { handleShowAddFriends } from '../../../redux-store/actions';
-import { GET_FRIENDS } from '../../../gql/queries';
-import { USER_ID } from '../../../utils/constants';
 
-const Friends = () => {
+const Friends = ({ data }) => {
   const dispatch = useDispatch();
   const isShowingAddFriend = useSelector(
     ({ reducers }) => reducers.showAddFriends);
-  const { loading, error, data } = useQuery(GET_FRIENDS, {
-    variables: { userId: localStorage.getItem(USER_ID) }
-  })
 
+  console.log(data);
   return (
     <>
       <Box display='flex' justifyContent='space-between'>

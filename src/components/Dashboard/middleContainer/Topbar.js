@@ -1,6 +1,8 @@
 import React from 'react';
 import { Box, makeStyles, Button } from '@material-ui/core';
 
+import history from '../../../utils/history';
+
 const useStyles = makeStyles({
   topbar: {
     backgroundColor: '#EEEEEE'
@@ -8,6 +10,10 @@ const useStyles = makeStyles({
 });
 
 const Topbar = () => {
+  const handleRouteToAddExpense = () => {
+    history.push('/create-expense')
+  };
+
   const classes = useStyles();
   return (
     <Box
@@ -20,7 +26,7 @@ const Topbar = () => {
       </Box>
       <Box display='flex' justifyContent='flex-end'>
         <Box>
-          <Button>Add an expense</Button>
+          <Button onClick={handleRouteToAddExpense}>Add an expense</Button>
         </Box>
         <Box>
           <Button>Settle up</Button>

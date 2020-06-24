@@ -1,25 +1,30 @@
 import React, { useState } from 'react';
-import { useMutation } from '@apollo/react-hooks';
-
+import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { withRouter } from 'react-router-dom';
 import { AUTH_TOKEN, USER_ID } from '../utils/constants';
 import { LOGIN_USER } from '../gql/mutations';
 
 const Login = ({ history }) => {
+  const client = useApolloClient();
   const [email, setEmail] = useState(''),
     [password, setPassword] = useState('');
 
-  const [logIn, { data }] = useMutation(LOGIN_USER);
+  const [loginUser, { loading, error }] = useMutation(LOGIN_USER, {
+    onCompleted({ loginUser }) {
+      localStorage.setItem(AUTH_TOKEN, loginUser.authToken);
+      localStorage.setItem(USER_ID, loginUser.id);
+      client.writeData({ data: { isLoggedIn: true } });
+    }
+  });
+
   const handleLogIn = e => {
     e.preventDefault();
-    logIn({ variables: { email, password } })
-    setJWTToken(data);
+    loginUser({ variables: { email, password } })
+    if (!error) {
+      history.push('/dashboard');
+    }
   };
 
-  const setJWTToken = ({ loginUser }) => {
-    localStorage.setItem(AUTH_TOKEN, loginUser.authToken);
-    localStorage.setItem(USER_ID, loginUser.id);
-
-  };
 
   return (
     <>
@@ -48,4 +53,4 @@ const Login = ({ history }) => {
   );
 };
 
-export default Login;
+export default withRouter(Login);

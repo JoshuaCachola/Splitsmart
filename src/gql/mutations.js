@@ -2,8 +2,9 @@ import gql from 'graphql-tag';
 
 export const LOGIN_USER = gql`
   mutation LoginMutation($email: String!, $password: String!) {
-    logIn(email: $email, password: $password) {
-      authToken
+    loginUser(email: $email, password: $password) {
+      authToken,
+      id
     }
   }
 `;
@@ -22,17 +23,16 @@ export const CREATE_USER = gql`
   }
 `;
 
-export const ADD_FRIEND = gql`
-  mutation AddFriend($userId: Int!, $friendId: Int!) {
-    addFriend(userId: $userId, friendId: $friendId) {
-      addFriendSuccess,
-      addUsersFriendSuccess
+export const FRIEND_REQUEST = gql`
+  mutation FriendRequest($friend1Id: Int!, $friend2Id: Int!) {
+    friendshipRequest(friend1Id: $friend1Id, friend2Id: $friend2Id) {
+      friendshipStatus
     }
   }
 `;
 
 export const CREATE_EXPENSE = gql`
-  mutation CREATE_EXPENSE($userId: Int!, $amount: Float!, $description: String!) {
+  mutation CreateExpense($userId: Int!, $amount: Float!, $description: String!) {
     createExpense(userId: $userId, amount: $amount, description: $description) {
       expense {
         amount,
