@@ -22,8 +22,12 @@ export const USER_SEARCH = gql`
 `;
 
 export const GET_FRIENDS = gql`
-  query GetFriends($friend1Id: Int!) {
-    getFriends(friend1Id: $friend1Id) {
+  query GetFriends($friendId: Int!) {
+    getFriends(friendId: $friendId) {
+      friend1 {
+        firstName,
+        lastName
+      },
       friend2 {
         firstName,
         lastName
@@ -56,6 +60,25 @@ export const GET_RECENT_ACTIVITY = gql`
         amount,
         paidOn,
         isSettled
+      }
+    }
+  }
+`;
+
+export const GET_ACTIVE_TRANSACTIONS = gql`
+  query GetActiveTransactions($userId: Int!) {
+    activeTransactions(userId: $userId) {
+      amount,
+      paidOn,
+      expense {
+        amount,
+        description,
+        isSettled,
+        createdAt
+        user {
+          firstName,
+          lastName
+        }
       }
     }
   }

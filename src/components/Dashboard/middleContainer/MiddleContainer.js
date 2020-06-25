@@ -11,7 +11,7 @@ const MiddleContainer = () => {
       <Topbar />
       {/* Active Expenses */}
       <ActiveExpenses />
-      <RecentActivity />
+      {/* <RecentActivity /> */}
     </>
   )
 };

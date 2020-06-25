@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, makeStyles, Button } from '@material-ui/core';
-
-import history from '../../../utils/history';
+import { withRouter } from 'react-router-dom';
 
 const useStyles = makeStyles({
   topbar: {
     backgroundColor: '#EEEEEE',
-    minHeight: '64px'
+    minHeight: '64px',
+    borderBottom: '1px solid #ddd'
   },
   header: {
     verticalAlign: 'middle',
@@ -16,9 +16,6 @@ const useStyles = makeStyles({
     lineHeight: '38px',
     maxWidth: '315px'
   },
-  buttonsContainer: {
-
-  },
   buttons: {
     lineHeight: '18px',
     marginLeft: '7px',
@@ -26,7 +23,7 @@ const useStyles = makeStyles({
   }
 });
 
-const Topbar = () => {
+const Topbar = ({ history }) => {
   const handleRouteToAddExpense = () => {
     history.push('/create-expense')
   };
@@ -71,4 +68,4 @@ const Topbar = () => {
   )
 };
 
-export default Topbar;
+export default withRouter(Topbar);

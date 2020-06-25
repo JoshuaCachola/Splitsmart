@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
 import { AUTH_TOKEN, USER_ID } from '../utils/constants';
 import { TextField, Box, Button, makeStyles } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
 
 import { CREATE_USER } from '../gql/mutations';
-import history from '../utils/history';
 
 const useStyles = makeStyles({
   signUpContainer: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles({
   }
 });
 
-const SignUp = () => {
+const SignUp = ({ history }) => {
   const client = useApolloClient();
   const [name, setName] = useState(''),
     [email, setEmail] = useState(''),
@@ -123,4 +123,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default withRouter(SignUp);

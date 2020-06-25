@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 
 const SplitExpense = () => {
   const friends = useSelector(state => state.reducers.yourFriends)
-
   // useEffect(() => {
   //   console.log(friends);
   // }, [friends])

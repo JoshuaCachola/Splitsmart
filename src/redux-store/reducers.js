@@ -6,7 +6,8 @@ import {
 
 export default function reducer(state = {
   showAddFriends: false,
-  showSplitExpense: false
+  showSplitExpense: false,
+  yourFriends: []
 }, action) {
   switch (action.type) {
     case SHOW_ADD_FRIENDS: {

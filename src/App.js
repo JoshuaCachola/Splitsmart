@@ -1,12 +1,10 @@
 import React from 'react';
-import { Router, Route, Switch } from 'react-router-dom';
+import { Route, Switch, BrowserRouter } from 'react-router-dom';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
-import history from './utils/history';
 import Homepage from './components/Homepage';
 import ProtectedRoute from './ProtectedRoute';
 import SignUp from './components/SignUp';
-import LogIn from './components/LogIn'
 import Dashboard from './components/dashboard/Dashboard';
 import CreateExpense from './components/dashboard/CreateExpense';
 
@@ -14,15 +12,14 @@ const App = () => {
   return (
     <>
       <CssBaseline />
-      <Router history={history}>
+      <BrowserRouter>
         <Switch>
           <Route path='/signup' exact={true} component={SignUp} />
-          <Route path='/login' exact={true} component={LogIn} />
           <Route path='/dashboard' exact={true} component={Dashboard} />
           <Route path='/create-expense' exact={true} component={CreateExpense} />
           <Route path='/' exact={true} component={Homepage} />
         </Switch>
-      </Router>
+      </BrowserRouter>
     </>
   );
 };

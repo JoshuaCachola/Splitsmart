@@ -1,11 +1,14 @@
 import React from 'react';
 import { Box, makeStyles, Button } from '@material-ui/core';
+import { withRouter } from 'react-router-dom';
+
+import LogIn from './LogIn';
 
 const useStyles = makeStyles({
 
 });
 
-const Homepage = () => {
+const Homepage = ({ history }) => {
   return (
     <>
       <header>
@@ -29,8 +32,9 @@ const Homepage = () => {
       <Box>
         <div>Let GoodFellas be the middleman to your next transaction</div>
       </Box>
+      <LogIn />
     </>
   )
 };
 
-export default Homepage;
+export default withRouter(Homepage);

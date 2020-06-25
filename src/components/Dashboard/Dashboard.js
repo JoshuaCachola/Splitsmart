@@ -22,16 +22,16 @@ const useStyles = makeStyles({
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { loading, error, data } = useQuery(GET_FRIENDS, {
-    variables: { friend1Id: parseInt(localStorage.getItem(USER_ID)) }
+    variables: { friendId: localStorage.getItem(USER_ID) }
   });
 
   useEffect(() => {
     if (data) {
       console.log(data);
-      dispatch(handleStoreFriends(data.friends));
+      dispatch(handleStoreFriends(data.getFriends));
     }
   }, [data]);
-
+  console.log(data);
   const classes = useStyles();
   return (
     <>
