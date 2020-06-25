@@ -15,7 +15,8 @@ const useStyles = makeStyles({
   middleContainer: {
     boxShadow: '0 0 12px rgba(0,0,0,0.2)',
     minHeight: '100vh'
-  }
+  },
+  container: {}
 });
 
 const Dashboard = () => {
@@ -35,23 +36,24 @@ const Dashboard = () => {
   return (
     <>
       <Navbar />
-      <Box display='flex'>
+      <Box display='flex' className={classes.container}>
         {/* Left menu */}
-        <Box flexBasis='25%'>
+        <Box flexBasis='30%'>
           <LeftContainer />
         </Box>
         {/* Middle */}
-        <Box flexBasis='50%'>
+        <Box flexBasis='40%'>
           <Box
             display='flex'
             flexDirection='column'
             className={classes.middleContainer}
+            m={0.2}
           >
             <MiddleContainer />
           </Box>
         </Box>
         {/* Right */}
-        <Box flexBasis='25%'>
+        <Box flexBasis='30%'>
 
         </Box>
       </Box>

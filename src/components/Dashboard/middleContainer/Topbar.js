@@ -5,7 +5,24 @@ import history from '../../../utils/history';
 
 const useStyles = makeStyles({
   topbar: {
-    backgroundColor: '#EEEEEE'
+    backgroundColor: '#EEEEEE',
+    minHeight: '64px'
+  },
+  header: {
+    verticalAlign: 'middle',
+    fontSize: '24px',
+    paddingLeft: '15px',
+    height: '38px',
+    lineHeight: '38px',
+    maxWidth: '315px'
+  },
+  buttonsContainer: {
+
+  },
+  buttons: {
+    lineHeight: '18px',
+    marginLeft: '7px',
+    padding: '9px 14px'
   }
 });
 
@@ -21,21 +38,28 @@ const Topbar = () => {
       justifyContent='space-between'
       className={classes.topbar}
     >
-      <Box>
+      <h1 className={classes.header}>
         Dashboard
-      </Box>
-      <Box display='flex' justifyContent='flex-end'>
+      </h1>
+      <Box
+        display='flex'
+        justifyContent='flex-end'
+        alignItems='center'
+        className={classes.buttonsContainer}
+      >
         <Box>
           <Button
             variant='contained'
+            size='medium'
             color='secondary'
             onClick={handleRouteToAddExpense}
           >
             Add an expense
           </Button>
         </Box>
-        <Box>
+        <Box className={classes.buttons}>
           <Button
+            size='medium'
             variant='contained'
             color='primary'
           >

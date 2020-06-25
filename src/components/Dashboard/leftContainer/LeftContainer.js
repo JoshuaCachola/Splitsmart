@@ -11,7 +11,6 @@ import { theme } from '../../../theme';
 
 const styles = {
   tabs: {
-    borderLeft: '10px solid #5BC5A7',
     padding: '3px 8px 5px 5px'
   },
   leftContainer: {
@@ -35,21 +34,24 @@ const LeftContainer = (props) => {
   // const classes = useStyles();
   const { classes } = props;
   return (
-    <Box className={classes.leftContainer}>
-      <Tabs
-        orientation='vertical'
-        variant='scrollable'
-        value={value}
-        onChange={handleChange}
-        aria-label='left container vertical tabs'
-        className={classes.tabs}
-        indicatorColor='white'
-      >
-        <Tab label='Dashboard' {...a11yProps(0)} />
-        <Tab label='Recent Activity' {...a11yProps(1)} />
-        <Tab label='All Expenses' {...a11yProps(2)} />
-      </Tabs>
-      <Friends />
+    <Box display='flex' className={classes.leftContainer}>
+      <Box>
+        <Tabs
+          orientation='vertical'
+          variant='scrollable'
+          value={value}
+          onChange={handleChange}
+          aria-label='left container vertical tabs'
+          className={classes.tabs}
+          indicatorColor='primary'
+        >
+          <Tab label='Dashboard' {...a11yProps(0)} />
+          <Tab label='Recent Activity' {...a11yProps(1)} />
+          <Tab label='All Expenses' {...a11yProps(2)} />
+        </Tabs>
+
+        <Friends />
+      </Box>
     </Box>
   );
 };

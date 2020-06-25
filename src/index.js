@@ -12,7 +12,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { ApolloProvider } from 'react-apollo'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
-import { InMemoryCache } from 'apollo-cache-inmemory'
+import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemory'
 import { AUTH_TOKEN } from './utils/constants';
 import { setContext } from 'apollo-link-context';
 
@@ -34,7 +34,15 @@ const authLink = setContext((_, { headers }) => {
 
 const client = new ApolloClient({
   link: authLink.concat(httpLink),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({
+    fragmentMatcher: new IntrospectionFragmentMatcher({
+      introspectionQueryResultData: {
+        __schema: {
+          types: [],
+        },
+      },
+    }),
+  }),
 });
 
 const store = configureStore();

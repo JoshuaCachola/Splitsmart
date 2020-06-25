@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Box, makeStyles, TextField, Button } from '@material-ui/core';
+import { Box, makeStyles, TextField, Button, Paper, ClickAwayListener } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { useLazyQuery, useMutation } from '@apollo/react-hooks';
 
@@ -47,7 +47,7 @@ const AddFriend = ({ isShowingAddFriend }) => {
   const classes = useStyles();
   return (
     <Box onClick={handleAddFriendContainer} className={classes.container}>
-      <Box>
+      <Paper>
         <Box>Search by email</Box>
         <TextField
           id="standard-search"
@@ -57,7 +57,7 @@ const AddFriend = ({ isShowingAddFriend }) => {
           onChange={e => setEmail(e.target.value)}
         />
         <Button onClick={() => getUser({ variables: { email } })}>Search</Button>
-      </Box>
+      </Paper>
       {/* loading error or search results  */}
       {data &&
         <table>
