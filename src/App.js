@@ -16,7 +16,6 @@ const App = () => {
         <Switch>
           <Route path='/signup' exact={true} component={SignUp} />
           <Route path='/dashboard' exact={true} component={Dashboard} />
-          <Route path='/create-expense' exact={true} component={CreateExpense} />
           <Route path='/' exact={true} component={Homepage} />
         </Switch>
       </BrowserRouter>

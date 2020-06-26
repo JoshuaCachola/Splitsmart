@@ -1,13 +1,15 @@
 import {
   SHOW_ADD_FRIENDS,
   SHOW_SPLIT_EXPENSE,
-  STORE_FRIENDS
+  STORE_FRIENDS,
+  FRIENDS_SPLIT_EXPENSE
 } from './actionTypes';
 
 export default function reducer(state = {
   showAddFriends: false,
   showSplitExpense: false,
-  yourFriends: []
+  yourFriends: [],
+  friendsSplitExpense: []
 }, action) {
   switch (action.type) {
     case SHOW_ADD_FRIENDS: {
@@ -26,6 +28,12 @@ export default function reducer(state = {
       return {
         ...state,
         yourFriends: action.friends
+      }
+    }
+    case FRIENDS_SPLIT_EXPENSE: {
+      return {
+        ...state,
+        friendsSplitExpense: action.friends
       }
     }
     default: return state

@@ -44,8 +44,8 @@ const useStyles = makeStyles({
 
 const ActiveExpenses = () => {
   const dispatch = useDispatch();
-  const showSplitExpense = useSelector(
-    state => state.reducers.showSplitExpense);
+  // const showSplitExpense = useSelector(
+  // ({ reducers }) => reducers.showSplitExpense);
   const { loading, error, data } = useQuery(GET_ACTIVE_TRANSACTIONS, {
     variables: { userId: localStorage.getItem(USER_ID) }
   });
@@ -107,10 +107,10 @@ const ActiveExpenses = () => {
           })
         }
       </Box>
-      {
+      {/* {
         showSplitExpense &&
         <SplitExpense />
-      }
+      } */}
     </>
   );
 };

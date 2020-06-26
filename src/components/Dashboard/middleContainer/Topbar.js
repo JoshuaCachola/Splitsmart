@@ -1,6 +1,10 @@
 import React from 'react';
 import { Box, makeStyles, Button } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
+import { handleShowSplitExpense } from '../../../redux-store/actions';
+import CreateExpense from '../CreateExpense';
 
 const useStyles = makeStyles({
   topbar: {
@@ -24,10 +28,12 @@ const useStyles = makeStyles({
 });
 
 const Topbar = ({ history }) => {
-  const handleRouteToAddExpense = () => {
-    history.push('/create-expense')
+  const dispatch = useDispatch();
+  const isShowing = useSelector(({ reducers }) => reducers.showSplitExpense);
+  const handleSplitExpense = () => {
+    console.log(isShowing);
+    dispatch(handleShowSplitExpense(isShowing));
   };
-
   const classes = useStyles();
   return (
     <Box
@@ -42,14 +48,13 @@ const Topbar = ({ history }) => {
         display='flex'
         justifyContent='flex-end'
         alignItems='center'
-        className={classes.buttonsContainer}
       >
         <Box>
           <Button
             variant='contained'
             size='medium'
             color='secondary'
-            onClick={handleRouteToAddExpense}
+            onClick={handleSplitExpense}
           >
             Add an expense
           </Button>
@@ -64,6 +69,9 @@ const Topbar = ({ history }) => {
           </Button>
         </Box>
       </Box>
+      {isShowing &&
+        <CreateExpense />
+      }
     </Box>
   )
 };
