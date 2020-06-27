@@ -25,10 +25,12 @@ export const GET_FRIENDS = gql`
   query GetFriends($friendId: Int!) {
     getFriends(friendId: $friendId) {
       friend1 {
+        id,
         firstName,
         lastName
       },
       friend2 {
+        id,
         firstName,
         lastName
       }
@@ -68,9 +70,11 @@ export const GET_RECENT_ACTIVITY = gql`
 export const GET_ACTIVE_TRANSACTIONS = gql`
   query GetActiveTransactions($userId: Int!) {
     activeTransactions(userId: $userId) {
+      id,
       amount,
       paidOn,
       expense {
+        id,
         amount,
         description,
         isSettled,
@@ -80,6 +84,19 @@ export const GET_ACTIVE_TRANSACTIONS = gql`
           lastName
         }
       }
+    }
+  }
+`;
+
+export const GET_EXPENSE_COMMENTS = gql`
+  query GetExpenseComments($expenseId: Int!) {
+    getExpenseComments(expenseId: $expenseId) {
+      comment,
+      date,
+      user {
+        firstName,
+        lastName
+      },
     }
   }
 `;

@@ -35,10 +35,31 @@ export const CREATE_EXPENSE = gql`
   mutation CreateExpense($userId: Int!, $amount: Float!, $description: String!) {
     createExpense(userId: $userId, amount: $amount, description: $description) {
       expense {
+        id,
         amount,
         description,
         createdAt,
         isSettled
+      }
+    }
+  }
+`;
+
+export const CREATE_TRANSACTION = gql`
+  mutation CreateTransaction($userId: Int!, $amount: Float!, $expenseId: Int!) {
+    createTransaction(userId: $userId, amount: $amount, expenseId: $expenseId) {
+      transaction {
+        id
+      }
+    }
+  }
+`;
+
+export const CREATE_COMMENT = gql`
+  mutation CreateComment($userId: Int!, $expenseId: Int!, $comment: String!) {
+    createComment(userId: $userId, expenseId: $expenseId, comment: $comment) {
+      comment {
+        id
       }
     }
   }

@@ -3,8 +3,9 @@ import { Box, makeStyles, Button } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { handleShowSplitExpense } from '../../../redux-store/actions';
+import { handleShowSplitExpense, handleShowSettleUp } from '../../../redux-store/actions';
 import CreateExpense from '../CreateExpense';
+import SettleUp from '../../../SettleUp';
 
 const useStyles = makeStyles({
   topbar: {
@@ -29,11 +30,16 @@ const useStyles = makeStyles({
 
 const Topbar = ({ history }) => {
   const dispatch = useDispatch();
-  const isShowing = useSelector(({ reducers }) => reducers.showSplitExpense);
+  const isSplitExpense = useSelector(({ reducers }) => reducers.showSplitExpense);
+  const isSettleUp = useSelector(({ reducers }) => reducers.showSettleUp);
+
   const handleSplitExpense = () => {
-    console.log(isShowing);
-    dispatch(handleShowSplitExpense(isShowing));
+    dispatch(handleShowSplitExpense(isSplitExpense));
   };
+  const handleSettleUp = () => {
+    dispatch(handleShowSettleUp(isSettleUp));
+  };
+
   const classes = useStyles();
   return (
     <Box
@@ -64,13 +70,17 @@ const Topbar = ({ history }) => {
             size='medium'
             variant='contained'
             color='primary'
+            onClick={handleSettleUp}
           >
             Settle up
           </Button>
         </Box>
       </Box>
-      {isShowing &&
+      {isSplitExpense &&
         <CreateExpense />
+      }
+      {isSettleUp &&
+        <SettleUp />
       }
     </Box>
   )

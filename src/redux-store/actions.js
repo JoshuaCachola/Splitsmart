@@ -2,7 +2,8 @@ import {
   SHOW_ADD_FRIENDS,
   SHOW_SPLIT_EXPENSE,
   STORE_FRIENDS,
-  FRIENDS_SPLIT_EXPENSE
+  FRIENDS_SPLIT_EXPENSE,
+  SHOW_SETTLE_UP
 } from './actionTypes';
 
 // action creators
@@ -34,6 +35,13 @@ export const friendsSplitExpense = friends => {
   }
 };
 
+export const showSettleUp = isShowing => {
+  return {
+    type: SHOW_SETTLE_UP,
+    isShowing
+  }
+};
+
 // thunks
 export const handleShowAddFriends = isShowing => dispatch => {
   dispatch(showAddFriends(!isShowing));
@@ -49,4 +57,8 @@ export const handleStoreFriends = friends => dispatch => {
 
 export const handleFriendsSplitExpense = friends => dispatch => {
   dispatch(friendsSplitExpense(friends));
+};
+
+export const handleShowSettleUp = isShowing => dispatch => {
+  dispatch(showSettleUp(!isShowing));
 };

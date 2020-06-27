@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   makeStyles,
   Button,
@@ -18,10 +18,10 @@ import { useMutation } from '@apollo/react-hooks';
 import { withRouter } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { CREATE_EXPENSE } from '../../gql/mutations';
+import { CREATE_EXPENSE, CREATE_TRANSACTION } from '../../gql/mutations';
 import { USER_ID } from '../../utils/constants';
 import FriendsList from './FriendsList';
-import { handleShowSplitExpense } from '../../redux-store/actions';
+import { handleShowSplitExpense, handleStoreFriends } from '../../redux-store/actions';
 
 const useStyles = makeStyles({
   title: {
@@ -42,14 +42,56 @@ const useStyles = makeStyles({
   },
 });
 
-const CreateExpense = ({ history }) => {
+const CreateExpense = () => {
   const dispatch = useDispatch();
   const isShowing = useSelector(({ reducers }) => reducers.showSplitExpense);
   const friends = useSelector(({ reducers }) => reducers.friendsSplitExpense);
-  const [description, setDescription] = useState(''),
-    [amount, setAmount] = useState('');
-  const [createExpense, _] = useMutation(CREATE_EXPENSE);
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState(0);
+  const [expenseId, setExpenseId] = useState(0);
+  const [createTransaction] = useMutation(CREATE_TRANSACTION);
+  const [createExpense, { loading, error }] = useMutation(CREATE_EXPENSE, {
+    onCompleted({ createExpense }) {
+      // console.log('in expense mutation', createExpense.expense.id);
+      // setExpenseId(createExpense.expense.id);
+      createTransaction({
+        variables: {
+          userId: parseInt(localStorage.getItem(USER_ID)),
+          amount: (amount / (friends.length + 1)).toFixed(2),
+          expenseId: createExpense.expense.id
+        }
+      });
+      friends.forEach(friend => {
+        if (friend.friend1.id === parseInt(localStorage.getItem(USER_ID))) {
+          createTransaction({
+            variables: {
+              userId: friend.friend1.id,
+              amount: (amount / (friends.length + 1)).toFixed(2),
+              expenseId: createExpense.expense.id
+            }
+          });
+        } else {
+          createTransaction({
+            variables: {
+              userId: friend.friend2.id,
+              amount: (amount / (friends.length + 1)).toFixed(2),
+              expenseId: createExpense.expense.id
+            }
+          });
+        }
+      });
 
+
+    }
+  });
+
+  // useEffect(() => {
+  //   console.log(expenseId);
+  //   if (expenseId !== 0) {
+
+  //   }
+  // }, [expenseId]);
+  console.log(friends);
   const handleCreateExpense = e => {
     e.preventDefault();
     console.log(description, amount);
@@ -60,8 +102,10 @@ const CreateExpense = ({ history }) => {
         userId: parseInt(localStorage.getItem(USER_ID))
       }
     });
-    history.push('/dashboard');
+
+    dispatch(handleShowSplitExpense(isShowing));
   };
+
 
   const handleClose = () => {
     dispatch(handleShowSplitExpense(isShowing));
@@ -83,7 +127,7 @@ const CreateExpense = ({ history }) => {
             id="form-dialog-title"
           >
             Add an expense
-          </DialogTitle>
+            </DialogTitle>
         </Box>
         <DialogContent>
           <Box width='80%'>
@@ -127,7 +171,7 @@ const CreateExpense = ({ history }) => {
             onClick={handleClose}
           >
             Cancel
-          </Button>
+            </Button>
           <Button
             variant='contained'
             type='button'
@@ -135,11 +179,12 @@ const CreateExpense = ({ history }) => {
             onClick={handleCreateExpense}
           >
             Save
-          </Button>
+            </Button>
         </DialogActions>
       </Dialog>
     </Paper>
   );
 };
+
 
 export default withRouter(CreateExpense);
