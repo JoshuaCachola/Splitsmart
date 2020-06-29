@@ -3,9 +3,15 @@ import {
   SHOW_SPLIT_EXPENSE,
   STORE_FRIENDS,
   FRIENDS_SPLIT_EXPENSE,
-  SHOW_SETTLE_UP
+  SHOW_SETTLE_UP,
+  SHOW_DASHBOARD,
+  SHOW_RECENT_ACTIVITY,
+  SHOW_ALL_EXPENSES,
+  SHOW_SETTLE_TRANSACTION,
+  DISPLAY_USER
 } from './actionTypes';
 
+import { FIRST_NAME, LAST_NAME } from '../utils/constants';
 // action creators
 export const showAddFriends = isShowing => {
   return {
@@ -42,6 +48,41 @@ export const showSettleUp = isShowing => {
   }
 };
 
+export const showDashboard = isShowing => {
+  return {
+    type: SHOW_DASHBOARD,
+    isShowing
+  };
+};
+
+export const showRecentActivity = isShowing => {
+  return {
+    type: SHOW_RECENT_ACTIVITY,
+    isShowing
+  };
+};
+
+export const showAllExpenses = isShowing => {
+  return {
+    type: SHOW_ALL_EXPENSES,
+    isShowing
+  };
+};
+
+export const showSettleTransaction = isShowing => {
+  return {
+    type: SHOW_SETTLE_TRANSACTION,
+    isShowing
+  };
+};
+
+export const displayUser = user => {
+  return {
+    type: DISPLAY_USER,
+    user
+  };
+};
+
 // thunks
 export const handleShowAddFriends = isShowing => dispatch => {
   dispatch(showAddFriends(!isShowing));
@@ -61,4 +102,26 @@ export const handleFriendsSplitExpense = friends => dispatch => {
 
 export const handleShowSettleUp = isShowing => dispatch => {
   dispatch(showSettleUp(!isShowing));
+};
+
+export const handleShowDashboard = isShowing => dispatch => {
+  dispatch(showDashboard(isShowing));
+};
+
+export const handleShowRecentActivity = isShowing => dispatch => {
+  dispatch(showRecentActivity(isShowing));
+};
+
+export const handleShowAllExpenses = isShowing => dispatch => {
+  dispatch(showAllExpenses(isShowing));
+};
+
+export const handleShowSettleTransaction = isShowing => dispatch => {
+  dispatch(showSettleTransaction(!isShowing));
+}
+
+export const handleDisplayUser = user => dispatch => {
+  localStorage.setItem(FIRST_NAME, user.firstName);
+  localStorage.setItem(LAST_NAME, user.lastName);
+  dispatch(displayUser(user));
 };

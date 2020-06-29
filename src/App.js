@@ -6,7 +6,6 @@ import Homepage from './components/Homepage';
 import ProtectedRoute from './ProtectedRoute';
 import SignUp from './components/SignUp';
 import Dashboard from './components/dashboard/Dashboard';
-import CreateExpense from './components/dashboard/CreateExpense';
 
 const App = () => {
   return (

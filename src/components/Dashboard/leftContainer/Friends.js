@@ -1,16 +1,14 @@
 import React from 'react';
 import { Box, Button, makeStyles } from '@material-ui/core';
 import { useSelector, useDispatch } from 'react-redux';
-import { useQuery } from '@apollo/react-hooks';
 
 import AddFriend from './AddFriend';
 import FriendsList from '../FriendsList';
 import { handleShowAddFriends } from '../../../redux-store/actions';
-import { USER_ID } from '../../../utils/constants';
 
 const useStyles = makeStyles({
   header: {
-    marginLeft: '5px',
+    marginTop: '10px',
     background: '#f6f6f6',
     color: '#ccc',
     borderBottom: '1px solid #eee',
@@ -19,7 +17,7 @@ const useStyles = makeStyles({
   },
   textHeader: {
     verticalAlign: 'middle',
-    fontSize: '11px'
+    fontSize: '14px'
   },
   addButton: {
     color: '#ccc',
@@ -33,7 +31,7 @@ const Friends = () => {
   const dispatch = useDispatch();
   const isShowingAddFriend = useSelector(
     ({ reducers }) => reducers.showAddFriends);
-
+  const friendsList = useSelector(({ reducers }) => reducers.yourFriends);
   const classes = useStyles();
   return (
     <Box>
@@ -46,13 +44,14 @@ const Friends = () => {
           >
             + add
           </Button>
-          {isShowingAddFriend &&
-            <AddFriend isShowingAddFriend={isShowingAddFriend} />
-          }
         </Box>
       </Box>
-      {/* show list of friends */}
-      <FriendsList />
+      {isShowingAddFriend &&
+        <AddFriend isShowingAddFriend={isShowingAddFriend} />
+      }
+      <Box m={0.5}>
+        <FriendsList friendsList={friendsList} remove={true} />
+      </Box>
     </Box>
   );
 };

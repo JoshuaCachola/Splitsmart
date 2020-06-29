@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   makeStyles,
   Button,
@@ -8,10 +8,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  Select,
   InputLabel,
-  MenuItem,
   Paper
 } from '@material-ui/core';
 import { useMutation } from '@apollo/react-hooks';
@@ -21,7 +18,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CREATE_EXPENSE, CREATE_TRANSACTION } from '../../gql/mutations';
 import { USER_ID } from '../../utils/constants';
 import FriendsList from './FriendsList';
-import { handleShowSplitExpense, handleStoreFriends } from '../../redux-store/actions';
+import { handleShowSplitExpense } from '../../redux-store/actions';
+import {
+  GET_ACTIVE_TRANSACTIONS,
+  GET_EXPENSE_TRANSACTIONS,
+  GET_RECENT_ACTIVITY,
+  GET_EXPENSE_COMMENTS,
+  ACTIVE_EXPENSES
+} from '../../gql/queries';
 
 const useStyles = makeStyles({
   title: {
@@ -40,6 +44,10 @@ const useStyles = makeStyles({
     borderBottom: '1px solid #eee',
     borderTop: '1px solid #f3f3f3',
   },
+  inputContainer: {
+    margin: '10px auto',
+    width: '80%'
+  }
 });
 
 const CreateExpense = () => {
@@ -47,8 +55,7 @@ const CreateExpense = () => {
   const isShowing = useSelector(({ reducers }) => reducers.showSplitExpense);
   const friends = useSelector(({ reducers }) => reducers.friendsSplitExpense);
   const [description, setDescription] = useState('');
-  const [amount, setAmount] = useState(0);
-  const [expenseId, setExpenseId] = useState(0);
+  const [amount, setAmount] = useState('');
   const [createTransaction] = useMutation(CREATE_TRANSACTION);
   const [createExpense, { loading, error }] = useMutation(CREATE_EXPENSE, {
     onCompleted({ createExpense }) {
@@ -59,7 +66,23 @@ const CreateExpense = () => {
           userId: parseInt(localStorage.getItem(USER_ID)),
           amount: (amount / (friends.length + 1)).toFixed(2),
           expenseId: createExpense.expense.id
-        }
+        },
+        refetchQueries: [{
+          query: GET_RECENT_ACTIVITY,
+          variables: { userId: localStorage.getItem(USER_ID) }
+        }, {
+          query: GET_ACTIVE_TRANSACTIONS,
+          variables: { userId: localStorage.getItem(USER_ID) }
+        }, {
+          query: GET_EXPENSE_TRANSACTIONS,
+          variables: { expenseId: createExpense.expense.id }
+        }, {
+          query: GET_EXPENSE_COMMENTS,
+          variables: { expenseId: createExpense.expense.id }
+        }, {
+          query: ACTIVE_EXPENSES,
+          variables: { userId: localStorage.getItem(USER_ID) }
+        }]
       });
       friends.forEach(friend => {
         if (friend.friend1.id === parseInt(localStorage.getItem(USER_ID))) {
@@ -68,7 +91,23 @@ const CreateExpense = () => {
               userId: friend.friend1.id,
               amount: (amount / (friends.length + 1)).toFixed(2),
               expenseId: createExpense.expense.id
-            }
+            },
+            refetchQueries: [{
+              query: GET_RECENT_ACTIVITY,
+              variables: { userId: localStorage.getItem(USER_ID) }
+            }, {
+              query: GET_ACTIVE_TRANSACTIONS,
+              variables: { userId: localStorage.getItem(USER_ID) }
+            }, {
+              query: GET_EXPENSE_TRANSACTIONS,
+              variables: { expenseId: createExpense.expense.id }
+            }, {
+              query: GET_EXPENSE_COMMENTS,
+              variables: { expenseId: createExpense.expense.id }
+            }, {
+              query: ACTIVE_EXPENSES,
+              variables: { userId: localStorage.getItem(USER_ID) }
+            }]
           });
         } else {
           createTransaction({
@@ -76,7 +115,23 @@ const CreateExpense = () => {
               userId: friend.friend2.id,
               amount: (amount / (friends.length + 1)).toFixed(2),
               expenseId: createExpense.expense.id
-            }
+            },
+            refetchQueries: [{
+              query: GET_RECENT_ACTIVITY,
+              variables: { userId: localStorage.getItem(USER_ID) }
+            }, {
+              query: GET_ACTIVE_TRANSACTIONS,
+              variables: { userId: localStorage.getItem(USER_ID) }
+            }, {
+              query: GET_EXPENSE_TRANSACTIONS,
+              variables: { expenseId: createExpense.expense.id }
+            }, {
+              query: GET_EXPENSE_COMMENTS,
+              variables: { expenseId: createExpense.expense.id }
+            }, {
+              query: ACTIVE_EXPENSES,
+              variables: { userId: localStorage.getItem(USER_ID) }
+            }]
           });
         }
       });
@@ -85,16 +140,8 @@ const CreateExpense = () => {
     }
   });
 
-  // useEffect(() => {
-  //   console.log(expenseId);
-  //   if (expenseId !== 0) {
-
-  //   }
-  // }, [expenseId]);
-  console.log(friends);
   const handleCreateExpense = e => {
     e.preventDefault();
-    console.log(description, amount);
     createExpense({
       variables: {
         description,
@@ -130,8 +177,8 @@ const CreateExpense = () => {
             </DialogTitle>
         </Box>
         <DialogContent>
-          <Box width='80%'>
-            <Box justifyContent='center'>
+          <Box width='100%'>
+            <Box className={classes.inputContainer}>
               <InputLabel id="expense-description-label">Description</InputLabel>
               <TextField
                 type='text'
@@ -148,7 +195,7 @@ const CreateExpense = () => {
                 fullWidth={true}
               />
               <Box>
-                <h2 className={classes.friendsHeader}>Friends added to expense</h2>
+                <h2 className={classes.friendsHeader}>Friends to add to expense</h2>
               </Box>
               <div>
                 {friends &&

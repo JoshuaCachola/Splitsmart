@@ -1,23 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Box,
-  Tabs,
-  Tab,
-  makeStyles
-} from '@material-ui/core';
+import React from 'react';
+import { Box } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import Friends from './Friends';
+import { useSelector, useDispatch } from 'react-redux';
+
 import { theme } from '../../../theme';
+import {
+  handleShowDashboard,
+  handleShowRecentActivity,
+  handleShowAllExpenses
+} from '../../../redux-store/actions';
 
 const styles = {
   leftContainer: {
     marginTop: '11px',
+    marginLeft: '230px',
+    maxWidth: '50%',
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'flex-end'
   },
-  navUnselected: {
-    textAlign: 'left',
+  navigation: {
     width: '172px',
     marginLeft: '2px',
     overflow: 'hidden',
@@ -25,19 +27,20 @@ const styles = {
     textOverflow: 'ellipsis',
     color: '#999',
   },
-  dashUnselected: {
+  dashboard: {
     margin: '11px 0 0',
     padding: '3px 8px 5px 5px',
     fontSize: '16px',
     lineHeight: '21px',
-    justifyContent: 'flex-end'
+    cursor: 'pointer'
   },
-  actUnselected: {
+  recentActivity: {
     padding: '3px 8px 5px 5px',
     fontSize: '16px',
-    lineHeight: '21px'
+    lineHeight: '21px',
+    cursor: 'pointer'
   },
-  expUnselected: {
+  allExpenses: {
     color: 'inherit',
     display: 'block',
     height: '19px',
@@ -45,66 +48,82 @@ const styles = {
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    padding: '3px 8px 2px 8px',
+    paddingLeft: '5px',
     textDecoration: 'none',
-    borderLeft: '6px solid #fff'
+    marginTop: '10px',
+    cursor: 'pointer'
   },
-  navText: {
-    justifyContent: 'flex-end'
+  active: {
+    color: '#5BC5A7',
+    fontWeight: 'bold',
+    borderLeft: '6px solid #5BC5A7',
+    paddingLeft: '5px'
+  },
+  inactive: {
+    color: '#999999',
   }
 }
 
-// function a11yProps(index) {
-//   return {
-//     id: `vertical-tab-${index}`,
-//     'aria-controls': `vertical-tabpanel-${index}`,
-//   };
-// }
 const LeftContainer = (props) => {
-  const [value, setValue] = useState(0);
+  const dispatch = useDispatch();
+  const isDashboard = useSelector(({ reducers }) => reducers.showDashboard);
+  const isRecentActivity = useSelector(({ reducers }) => reducers.showRecentActivity);
+  const isAllExpenses = useSelector(({ reducers }) => reducers.showAllExpenses);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+  const _allOff = () => {
+    dispatch(handleShowDashboard(false));
+    dispatch(handleShowRecentActivity(false));
+    dispatch(handleShowAllExpenses(false));
   };
 
-  // const classes = useStyles();
+  const handleIsDashboard = () => {
+    _allOff();
+    dispatch(handleShowDashboard(true));
+  };
+
+  const handleIsRecentActivity = () => {
+    _allOff();
+    dispatch(handleShowRecentActivity(true));
+  };
+
+  const handleIsAllExpenses = () => {
+    _allOff();
+    dispatch(handleShowAllExpenses(true));
+  };
+
   const { classes } = props;
   return (
     <Box className={classes.leftContainer}>
-      <Box className={classes.navUnselected}>
-        <div className={classes.dashUnselected}>
-          <span className={classes.navText}>Dashboard</span>
-        </div>
-        <div className={classes.actUnselected}>
-          <span className={classes.navText}>Recent activity</span>
-        </div>
-        <div>
-          <span className={classes.navText}>All expenses</span>
-        </div>
-      </Box>
-      {/* <Box className={classes.root}>
-        <Tabs
-          orientation='vertical'
-          variant='scrollable'
-          value={value}
-          onChange={handleChange}
-          aria-label='left container vertical tabs'
-          className={classes.tabs}
-        // indicatorColor='primary'
-        >
-          <Tab label='Dashboard' {...a11yProps(0)} />
-          <Tab label='Recent Activity' {...a11yProps(1)} />
-          <Tab label='All Expenses' {...a11yProps(2)} />
-        </Tabs>
-
-        <Friends />
-      </Box> */}
-      <Box>
-        <Friends />
+      <Box justifyContent='flex-end'>
+        <Box className={classes.navigation}>
+          <div
+            className={classes.dashboard}
+            onClick={handleIsDashboard}
+          >
+            <span className={`${isDashboard ? classes.active : classes.inactive}`}>
+              <i className="fas fa-border-all"></i> Dashboard</span>
+          </div>
+          <div
+            className={classes.recentActivity}
+            onClick={handleIsRecentActivity}
+          >
+            <span className={`${isRecentActivity ? classes.active : classes.inactive}`}>
+              <i className="fab fa-font-awesome-flag"></i> Recent activity</span>
+          </div>
+          <div
+            className={classes.allExpenses}
+            onClick={handleIsAllExpenses}
+          >
+            <span className={`${isAllExpenses ? classes.active : classes.inactive}`}>
+              <i className="fas fa-bars"></i> All expenses</span>
+          </div>
+          <Box>
+            <Friends />
+          </Box>
+        </Box>
       </Box>
     </Box>
   );
 };
 
 export default withStyles(styles)(LeftContainer);
-// export default LeftContainer;

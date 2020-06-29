@@ -1,4 +1,6 @@
 import React from 'react';
+import { useMutation } from '@apollo/react-hooks';
+import { useSelector, useDispatch } from 'react-redux';
 import {
   makeStyles,
   Button,
@@ -14,16 +16,11 @@ import {
   MenuItem,
   Paper
 } from '@material-ui/core';
-import { useSelector, useDispatch } from 'react-redux';
-import { useMutation } from '@apollo/react-hooks';
 
-import {
-  handleShowSettleUp,
-  handleShowSettleTransaction
-} from './redux-store/actions';
-import { HANDLE_TRANSACTION } from './gql/mutations';
-import { USER_ID } from './utils/constants';
-import { GET_RECENT_ACTIVITY } from './gql/queries';
+import { handleShowSettleTransaction } from '../../../redux-store/actions';
+import { HANDLE_TRANSACTION } from '../../../gql/mutations';
+import { USER_ID } from '../../../utils/constants';
+import { GET_RECENT_ACTIVITY, GET_ACTIVE_TRANSACTIONS } from '../../../gql/queries';
 
 const useStyles = makeStyles({
   title: {
@@ -34,11 +31,6 @@ const useStyles = makeStyles({
     fontWeight: 'bold',
     color: 'white'
   },
-  buttons: {
-    display: 'flex',
-    flexDirection: 'column',
-    margin: '5px'
-  },
   image: {
     width: '50%'
   },
@@ -46,21 +38,45 @@ const useStyles = makeStyles({
     backgroundColor: '#3d95ce',
     borderRadius: '5px'
   },
-
+  buttons: {
+    margin: '5px'
+  }
 });
 
-const SettleUp = ({ id }) => {
+const SettleTransaction = ({ id }) => {
   const dispatch = useDispatch();
-  const isSettleUp = useSelector(({ reducers }) => reducers.showSettleUp);
+  const isSettleTransaction = useSelector(({ reducers }) => reducers.showSettleTransaction);
+
   const handleClose = () => {
-    dispatch(handleShowSettleUp(isSettleUp));
+    dispatch(handleShowSettleTransaction(isSettleTransaction));
+  };
+
+  const [handleTransaction] = useMutation(HANDLE_TRANSACTION, {
+    refetchQueries: [{
+      query: GET_RECENT_ACTIVITY,
+      variables: { userId: localStorage.getItem(USER_ID) }
+    }, {
+      query: GET_ACTIVE_TRANSACTIONS,
+      variables: {
+        userId: localStorage.getItem(USER_ID)
+      }
+    }]
+  });
+
+  const handlePayment = () => {
+    handleTransaction({
+      variables: {
+        id
+      }
+    });
+    handleClose();
   };
 
   const classes = useStyles();
   return (
     <Paper>
       <Dialog
-        open={isSettleUp}
+        open={isSettleTransaction}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
         maxWidth='xs'
@@ -71,14 +87,14 @@ const SettleUp = ({ id }) => {
             className={classes.titleText}
             id="form-dialog-title"
           >
-            Settle up
+            Pay for expense
             </DialogTitle>
         </Box>
         <DialogContent>
           <Box>
             <h2>Choose a payment method</h2>
           </Box>
-          <Box className={classes.buttons} display='flex' flexDirection='column'>
+          <Box display='flex' flexDirection='column'>
             <Button
               variant='contained'
               type='button'
@@ -89,8 +105,8 @@ const SettleUp = ({ id }) => {
               Record a cash payment
             </Button>
             <Button
-              className={classes.buttons}
               variant='outlined'
+              className={classes.buttons}
             >
               <img className={classes.image} src='paypal.png' alt='paypal' />
             </Button>
@@ -115,8 +131,9 @@ const SettleUp = ({ id }) => {
               variant='contained'
               type='button'
               color='primary'
+              onClick={handlePayment}
             >
-              Save
+              Pay
             </Button>
           </Box>
         </DialogActions>
@@ -125,4 +142,4 @@ const SettleUp = ({ id }) => {
   );
 };
 
-export default SettleUp;
+export default SettleTransaction;

@@ -32,6 +32,9 @@ export const timeDifferenceForDate = (date) => {
   return timeDifference(now, updated)
 }
 
-export const sortByDate = (activity) => {
-  return activity;
+export const sortByDate = activities => {
+  const sortedActivities = activities.sort((a, b) => {
+    return new Date(b.updatedAt) - new Date(a.updatedAt);
+  });
+  return sortedActivities;
 };

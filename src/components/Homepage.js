@@ -4,35 +4,79 @@ import { withRouter } from 'react-router-dom';
 
 import LogIn from './LogIn';
 
-const useStyles = makeStyles({
-
-});
+const useStyles = makeStyles((theme) => ({
+  headerLogo: {
+    width: '30px',
+    height: '30px',
+    marginTop: '10px',
+  },
+  login: {
+    backgroundColor: 'white',
+    minHeight: '100vh',
+    justifyContent: 'center'
+  },
+  nav: {
+    backgroundColor: `${theme.palette.primary.main}`,
+    maxWidth: '100%',
+    display: 'flex',
+    bottomBorder: '1px solid #48be9d',
+    boxShadow: '0 0 3px rgba(0,0,0,0.5)',
+  },
+  button: {
+    color: 'white'
+  },
+  textLogo: {
+    color: 'white'
+  },
+  navContent: {
+    width: '80%',
+    justifyContent: 'space-between',
+    margin: 'auto auto',
+    display: 'flex'
+  },
+  loginContainer: {
+    marginTop: '100px'
+  }
+}));
 
 const Homepage = ({ history }) => {
+  const classes = useStyles();
   return (
     <>
       <header>
-        <nav>
-          <Box display="flex" justifyContent='space-between'>
-            <Box>
-              <div>GoodFellas</div>
+        <nav className={classes.nav}>
+          {/* <Box
+          className={classes.nav}
+        > */}
+          <Box className={classes.navContent}>
+            <Box display='flex'>
+              <img
+                src='logo.svg'
+                alt='homepage-pic'
+                className={classes.headerLogo}></img>
+              <h2 className={classes.textLogo}>Splitsmart</h2>
             </Box>
-            <Box>
-              <Button color='primary'>Log in</Button>
+            <Box display='flex' alignItems='center'>
               <Button
-                variant='contained'
-                color='primary'
+                className={classes.button}
+                size='large'
+                onClick={() => history.push('/signup')}
               >
                 Sign up
               </Button>
             </Box>
           </Box>
+          {/* </Box> */}
         </nav>
       </header>
-      <Box>
-        <div>Let GoodFellas be the middleman to your next transaction</div>
+      <Box display='flex' className={classes.login}>
+        <Box flexBasis='40%'>
+          <img src='homepage.jpg' alt='homepage-pic'></img>
+        </Box>
+        <Box flexBasis='20%' className={classes.loginContainer}>
+          <LogIn />
+        </Box>
       </Box>
-      <LogIn />
     </>
   )
 };

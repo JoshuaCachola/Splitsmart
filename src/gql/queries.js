@@ -41,27 +41,47 @@ export const GET_FRIENDS = gql`
 export const GET_RECENT_ACTIVITY = gql`
   query GetRecentActivity($userId: Int!) {
     recentActivity(userId: $userId) {
-      ... on Comment {
-        comment,
-        date,
-        user {
+      ... on Friendship {
+        updatedAt,
+        friend1 {
           firstName,
           lastName
         },
-        expense {
-          description,
-          amount
+        friend2 {
+          firstName,
+          lastName
         }
+        status
+      }
+    ... on Friendship {
+        id,
+      	updatedAt,
+        friend1 {
+          id,
+          firstName,
+          lastName
+        },
+        friend2 {
+          id,
+          firstName,
+          lastName
+        }
+        status
       }
       ... on Transaction {
         expense {
           description,
           amount,
-          createdAt
+          createdAt,
+          user {
+            firstName,
+            lastName
+          }
         },
         amount,
         paidOn,
-        isSettled
+        isSettled,
+        updatedAt
       }
     }
   }
@@ -91,12 +111,28 @@ export const GET_ACTIVE_TRANSACTIONS = gql`
 export const GET_EXPENSE_COMMENTS = gql`
   query GetExpenseComments($expenseId: Int!) {
     getExpenseComments(expenseId: $expenseId) {
+      expense {
+        id
+      }
       comment,
       date,
       user {
         firstName,
         lastName
       },
+    }
+  }
+`;
+
+export const GET_EXPENSE_TRANSACTIONS = gql`
+  query GetExpenseTransactions($expenseId: Int!) {
+    getExpenseTransactions(expenseId: $expenseId) {
+      amount,
+      isSettled,
+      user {
+        firstName,
+        lastName
+      }
     }
   }
 `;

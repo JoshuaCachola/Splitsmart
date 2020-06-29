@@ -4,7 +4,9 @@ export const LOGIN_USER = gql`
   mutation LoginMutation($email: String!, $password: String!) {
     loginUser(email: $email, password: $password) {
       authToken,
-      id
+      id,
+      firstName,
+      lastName
     }
   }
 `;
@@ -16,7 +18,9 @@ export const CREATE_USER = gql`
     createUser(firstName: $firstName, lastName: $lastName,
       email: $email, password: $password) {
       user {
-        id
+        id,
+        firstName,
+        lastName
       }
       authToken
     }
@@ -59,6 +63,26 @@ export const CREATE_COMMENT = gql`
   mutation CreateComment($userId: Int!, $expenseId: Int!, $comment: String!) {
     createComment(userId: $userId, expenseId: $expenseId, comment: $comment) {
       comment {
+        id
+      }
+    }
+  }
+`;
+
+export const HANDLE_FRIEND_REQUEST = gql`
+  mutation HandleFriendRequest($id: Int!, $status: String!) {
+    handleFriendRequest(id: $id, status: $status) {
+      friendRequest {
+      id
+    }
+  }
+}
+`;
+
+export const HANDLE_TRANSACTION = gql`
+  mutation HandleTransaction($id: Int!) {
+    handleTransaction(id: $id) {
+      transaction {
         id
       }
     }

@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useDispatch } from 'react-redux';
+
 import { AUTH_TOKEN, USER_ID } from '../utils/constants';
 import { TextField, Box, Button, makeStyles } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
-
 import { CREATE_USER } from '../gql/mutations';
+import { handleDisplayUser } from '../redux-store/actions';
 
 const useStyles = makeStyles({
   signUpContainer: {
-    minWidth: '50%'
+    minWidth: '30%',
+    marginTop: '50px'
   },
   bold: {
     fontWeight: 'bold'
@@ -22,36 +25,46 @@ const useStyles = makeStyles({
   introduction: {
     fontSize: '16px',
     color: '#999999'
+  },
+  container: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image: {
+    width: '200%',
+    height: '200%',
+  },
+  button: {
+    marginTop: '5px'
   }
 });
 
 const SignUp = ({ history }) => {
   const client = useApolloClient();
+  const dispatch = useDispatch();
   const [name, setName] = useState(''),
     [email, setEmail] = useState(''),
     [password, setPassword] = useState(''),
     [confirmPassword, setConfirmPassword] = useState('');
 
-  const [createUser, { loading, error }] = useMutation(CREATE_USER, {
+  const [createUser] = useMutation(CREATE_USER, {
     onCompleted({ createUser }) {
-      console.log(createUser);
       localStorage.setItem(AUTH_TOKEN, createUser.authToken);
       localStorage.setItem(USER_ID, createUser.user.id);
       client.writeData({ data: { isLoggedIn: true } });
-
-      // if loading or error
-      // if (loading) return <Loading />;
-      // if (error) return <p>An error occurred</p>;
-
-      // return <LoginForm login={login} />;
+      dispatch(handleDisplayUser({
+        firstName: createUser.user.firstName,
+        lastName: createUser.user.lastName
+      }))
     }
   });
 
   const handleSignUp = e => {
     e.preventDefault();
-    const splitName = name.split(),
-      firstName = splitName[0],
-      lastName = splitName[1];
+    const splitName = name.split(' ');
+    const firstName = splitName[0];
+    const lastName = splitName[1];
     if (password === confirmPassword) {
       createUser({
         variables: {
@@ -70,7 +83,10 @@ const SignUp = ({ history }) => {
   const classes = useStyles();
   return (
     <>
-      <Box display='flex' justifyContent='center'>
+      <Box className={classes.container}>
+        <Box m={12}>
+          <img className={classes.image} src='logo.svg' alt='logo-pic' />
+        </Box>
         <Box className={classes.signUpContainer}>
           <form onSubmit={handleSignUp} autoCompplete='off'>
             <Box display='flex' flexDirection='column'>
@@ -81,7 +97,7 @@ const SignUp = ({ history }) => {
                   type='text'
                   variant="outlined"
                   onChange={e => setName(e.target.value)}
-                  placeholder='Henry Hill'
+                  placeholder='Demo User'
                   required
                 />
               </Box>
@@ -106,15 +122,16 @@ const SignUp = ({ history }) => {
                 onChange={e => setConfirmPassword(e.target.value)}
                 required
               />
-              <div>
+              <Box>
                 <Button
                   variant='contained'
                   type='submit'
                   color='secondary'
+                  className={classes.button}
                 >
                   Sign Up
             </Button>
-              </div>
+              </Box>
             </Box>
           </form>
         </Box>

@@ -3,7 +3,12 @@ import {
   SHOW_SPLIT_EXPENSE,
   STORE_FRIENDS,
   FRIENDS_SPLIT_EXPENSE,
-  SHOW_SETTLE_UP
+  SHOW_SETTLE_UP,
+  SHOW_DASHBOARD,
+  SHOW_RECENT_ACTIVITY,
+  SHOW_ALL_EXPENSES,
+  SHOW_SETTLE_TRANSACTION,
+  DISPLAY_USER
 } from './actionTypes';
 
 export default function reducer(state = {
@@ -11,7 +16,12 @@ export default function reducer(state = {
   showSplitExpense: false,
   yourFriends: [],
   friendsSplitExpense: [],
-  showSettleUp: false
+  showSettleUp: false,
+  showDashboard: true,
+  showRecentActivity: false,
+  showAllExpenses: false,
+  showSettleTransaction: false,
+  displayUser: {}
 }, action) {
   switch (action.type) {
     case SHOW_ADD_FRIENDS: {
@@ -42,6 +52,36 @@ export default function reducer(state = {
       return {
         ...state,
         showSettleUp: action.isShowing
+      }
+    }
+    case SHOW_DASHBOARD: {
+      return {
+        ...state,
+        showDashboard: action.isShowing
+      }
+    }
+    case SHOW_RECENT_ACTIVITY: {
+      return {
+        ...state,
+        showRecentActivity: action.isShowing
+      }
+    }
+    case SHOW_ALL_EXPENSES: {
+      return {
+        ...state,
+        showAllExpenses: action.isShowing
+      }
+    }
+    case SHOW_SETTLE_TRANSACTION: {
+      return {
+        ...state,
+        showSettleTransaction: action.isShowing
+      }
+    }
+    case DISPLAY_USER: {
+      return {
+        ...state,
+        displayUser: action.user
       }
     }
     default: return state

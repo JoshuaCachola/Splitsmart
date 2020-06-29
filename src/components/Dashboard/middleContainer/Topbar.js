@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Box, makeStyles, Button } from '@material-ui/core';
-import { withRouter } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { handleShowSplitExpense, handleShowSettleUp } from '../../../redux-store/actions';
@@ -28,11 +27,14 @@ const useStyles = makeStyles({
   }
 });
 
-const Topbar = ({ history }) => {
+const Topbar = () => {
   const dispatch = useDispatch();
+  const [header, setHeader] = useState('');
   const isSplitExpense = useSelector(({ reducers }) => reducers.showSplitExpense);
   const isSettleUp = useSelector(({ reducers }) => reducers.showSettleUp);
-
+  const isDashboard = useSelector(({ reducers }) => reducers.showDashboard);
+  const isRecentActivity = useSelector(({ reducers }) => reducers.showRecentActivity);
+  const isAllExpenses = useSelector(({ reducers }) => reducers.showAllExpenses);
   const handleSplitExpense = () => {
     dispatch(handleShowSplitExpense(isSplitExpense));
   };
@@ -41,6 +43,17 @@ const Topbar = ({ history }) => {
   };
 
   const classes = useStyles();
+
+  useEffect(() => {
+    if (isDashboard) {
+      setHeader('Dashboard');
+    } else if (isRecentActivity) {
+      setHeader('Recent activity');
+    } else if (isAllExpenses) {
+      setHeader('All expenses');
+    }
+  }, [isDashboard, isRecentActivity, isAllExpenses]);
+
   return (
     <Box
       display='flex'
@@ -48,7 +61,7 @@ const Topbar = ({ history }) => {
       className={classes.topbar}
     >
       <h1 className={classes.header}>
-        Dashboard
+        {header}
       </h1>
       <Box
         display='flex'
@@ -86,4 +99,4 @@ const Topbar = ({ history }) => {
   )
 };
 
-export default withRouter(Topbar);
+export default Topbar;

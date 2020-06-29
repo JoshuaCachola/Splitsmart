@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Box, makeStyles } from '@material-ui/core';
 import { useQuery } from '@apollo/react-hooks';
 import { useDispatch } from 'react-redux';
-// import { graphql } from '@apollo/react-hoc';
 
 import Navbar from '../Navbar';
 import MiddleContainer from './middleContainer/MiddleContainer';
 import LeftContainer from './leftContainer/LeftContainer';
+import RightContainer from './rightContainer/RightContainer';
 import { GET_FRIENDS } from '../../gql/queries';
 import { USER_ID } from '../../utils/constants';
 import { handleStoreFriends } from '../../redux-store/actions';
@@ -21,17 +21,16 @@ const useStyles = makeStyles({
 
 const Dashboard = () => {
   const dispatch = useDispatch();
-  const { loading, error, data } = useQuery(GET_FRIENDS, {
+  const { data } = useQuery(GET_FRIENDS, {
     variables: { friendId: localStorage.getItem(USER_ID) }
   });
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       dispatch(handleStoreFriends(data.getFriends));
     }
   }, [data]);
-  console.log(data);
+
   const classes = useStyles();
   return (
     <>
@@ -47,14 +46,14 @@ const Dashboard = () => {
             display='flex'
             flexDirection='column'
             className={classes.middleContainer}
-            m={0.2}
+            m={0.25}
           >
             <MiddleContainer />
           </Box>
         </Box>
         {/* Right */}
         <Box flexBasis='30%'>
-
+          <RightContainer />
         </Box>
       </Box>
     </>

@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   },
 });
 
-const FriendsList = ({ friendsList }) => {
+const FriendsList = ({ friendsList, remove }) => {
   const dispatch = useDispatch();
   const friendsExpense = useSelector(({ reducers }) => reducers.friendsSplitExpense)
   const friendList = useSelector(({ reducers }) => reducers.yourFriends);
@@ -51,7 +51,6 @@ const FriendsList = ({ friendsList }) => {
       setFriends(friendList);
     }
   }, [friendsList]);
-
   const classes = useStyles();
   return (
     <Box display='flex' flexDirection='column'>
@@ -75,8 +74,8 @@ const FriendsList = ({ friendsList }) => {
                   </Box>
                 </Box>
                 <Box>
-                  {friendsList &&
-                    <Button onClick={handleRemoveFriends}>X</Button>
+                  {friendsList && !remove &&
+                    <Button color='secondary' onClick={handleRemoveFriends}>Clear list</Button>
                   }
                 </Box>
               </Box>
@@ -99,7 +98,7 @@ const FriendsList = ({ friendsList }) => {
                   </Box>
                 </Box>
                 <Box>
-                  {friendsList &&
+                  {friendsList && !remove &&
                     <Button onClick={handleRemoveFriends}>X</Button>
                   }
                 </Box>
