@@ -8,7 +8,8 @@ import {
   SHOW_RECENT_ACTIVITY,
   SHOW_ALL_EXPENSES,
   SHOW_SETTLE_TRANSACTION,
-  DISPLAY_USER
+  DISPLAY_USER,
+  CURRENT_USER_ID
 } from './actionTypes';
 
 import { FIRST_NAME, LAST_NAME } from '../utils/constants';
@@ -83,6 +84,13 @@ export const displayUser = user => {
   };
 };
 
+export const currentUserId = id => {
+  return {
+    type: CURRENT_USER_ID,
+    id
+  };
+};
+
 // thunks
 export const handleShowAddFriends = isShowing => dispatch => {
   dispatch(showAddFriends(!isShowing));
@@ -124,4 +132,8 @@ export const handleDisplayUser = user => dispatch => {
   localStorage.setItem(FIRST_NAME, user.firstName);
   localStorage.setItem(LAST_NAME, user.lastName);
   dispatch(displayUser(user));
+};
+
+export const handleCurrentUserId = id => dispatch => {
+  dispatch(currentUserId(id));
 };

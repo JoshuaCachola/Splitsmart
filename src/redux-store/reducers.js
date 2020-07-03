@@ -8,7 +8,8 @@ import {
   SHOW_RECENT_ACTIVITY,
   SHOW_ALL_EXPENSES,
   SHOW_SETTLE_TRANSACTION,
-  DISPLAY_USER
+  DISPLAY_USER,
+  CURRENT_USER_ID
 } from './actionTypes';
 
 export default function reducer(state = {
@@ -82,6 +83,12 @@ export default function reducer(state = {
       return {
         ...state,
         displayUser: action.user
+      }
+    }
+    case CURRENT_USER_ID: {
+      return {
+        ...state,
+        currentUserId: action.id
       }
     }
     default: return state

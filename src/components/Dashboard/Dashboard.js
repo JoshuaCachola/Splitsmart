@@ -8,7 +8,7 @@ import MiddleContainer from './middleContainer/MiddleContainer';
 import LeftContainer from './leftContainer/LeftContainer';
 import RightContainer from './rightContainer/RightContainer';
 import { GET_FRIENDS } from '../../gql/queries';
-import { USER_ID } from '../../utils/constants';
+import { USER_ID, AUTH_TOKEN } from '../../utils/constants';
 import { handleStoreFriends } from '../../redux-store/actions';
 
 const useStyles = makeStyles({
@@ -22,7 +22,9 @@ const useStyles = makeStyles({
 const Dashboard = () => {
   const dispatch = useDispatch();
   const { data } = useQuery(GET_FRIENDS, {
-    variables: { friendId: localStorage.getItem(USER_ID) }
+    variables: {
+      friendId: localStorage.getItem(USER_ID)
+    }
   });
 
   useEffect(() => {

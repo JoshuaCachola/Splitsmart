@@ -6,7 +6,7 @@ import { AUTH_TOKEN, USER_ID } from '../utils/constants';
 import { TextField, Box, Button, makeStyles } from '@material-ui/core';
 import { withRouter } from 'react-router-dom';
 import { CREATE_USER } from '../gql/mutations';
-import { handleDisplayUser } from '../redux-store/actions';
+import { handleDisplayUser, handleCurrentUserId } from '../redux-store/actions';
 
 const useStyles = makeStyles({
   signUpContainer: {

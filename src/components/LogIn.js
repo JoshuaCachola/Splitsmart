@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { withRouter } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
 import { AUTH_TOKEN, USER_ID } from '../utils/constants';
 import { LOGIN_USER } from '../gql/mutations';
 import { Button, TextField, Box, makeStyles } from '@material-ui/core';
-import { handleDisplayUser } from '../redux-store/actions';
+import { handleDisplayUser, handleCurrentUserId } from '../redux-store/actions';
 
 const useStyles = makeStyles({
   container: {
@@ -29,29 +29,26 @@ const useStyles = makeStyles({
 });
 
 const Login = ({ history }) => {
-  const client = useApolloClient();
   const dispatch = useDispatch();
-  const [email, setEmail] = useState(''),
-    [password, setPassword] = useState('');
+  const [email, setEmail] = useState('demo@user.com'),
+    [password, setPassword] = useState('password');
 
-  const [loginUser, { error }] = useMutation(LOGIN_USER, {
+  const [loginUser] = useMutation(LOGIN_USER, {
     onCompleted({ loginUser }) {
       localStorage.setItem(AUTH_TOKEN, loginUser.authToken);
       localStorage.setItem(USER_ID, loginUser.id);
-      client.writeData({ data: { isLoggedIn: true } });
       dispatch(handleDisplayUser({
         firstName: loginUser.firstName,
         lastName: loginUser.lastName
       }))
+      dispatch(handleCurrentUserId(loginUser.id));
+      history.push('/dashboard');
     }
   });
 
   const handleLogIn = e => {
     e.preventDefault();
     loginUser({ variables: { email, password } })
-    if (!error) {
-      history.push('/dashboard');
-    }
   };
 
   const classes = useStyles();

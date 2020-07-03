@@ -1,6 +1,22 @@
-# GoodFellas
+# Splitsmart
 
-One stop spot for making any type of payment. Let GoodFellas be the middleman for your future transactions.
+Got an expense that needs to be split between mulitple people? Need a platform to help manage to help manage those expenses? Let Splitsmart handle those transactions for you.
+
+![Splitsmart-dashboard](/public/ss-dashboard)
+
+## Technology List
+- Javascript
+- Python
+- React (with hooks)
+- Flask
+- PostgreSQL
+- Graph QL
+  - Apollo
+  - Graphene
+- Material UI
+
+### Link to backend repository
+[Splitsmart API](https://github.com/JoshuaCachola/Splitsmart-api)
 
 ## MVP List
 - users will be able to create expenses (bills)
