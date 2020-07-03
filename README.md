@@ -2,7 +2,7 @@
 
 Got an expense that needs to be split between mulitple people? Need a platform to help manage to help manage those expenses? Let Splitsmart handle those transactions for you.
 
-![Splitsmart-dashboard](/public/ss-dashboard)
+![Splitsmart-dashboard](/public/ss-dashboard.png)
 
 ## Technology List
 - Javascript
