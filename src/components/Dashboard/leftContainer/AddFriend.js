@@ -1,23 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { Box, makeStyles, TextField, Button } from '@material-ui/core';
-import { useDispatch } from 'react-redux';
-import { useLazyQuery, useMutation } from '@apollo/react-hooks';
+import { useDispatch, useSelector } from 'react-redux';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 
 import { handleShowAddFriends } from '../../../redux-store/actions';
-import { USER_SEARCH, GET_RECENT_ACTIVITY } from '../../../gql/queries';
+import { GET_ALL_USERS, GET_RECENT_ACTIVITY } from '../../../gql/queries';
 import { FRIEND_REQUEST } from '../../../gql/mutations';
 import { USER_ID } from '../../../utils/constants';
 
-const useStyles = makeStyles({
+const useStyles = makeStyles(theme => ({
   container: {
-    marginTop: '5px'
+    margin: '10px 0'
+  },
+  notSelected: {
+    color: '#999999',
+    cursor: 'pointer',
+    '&:hover': {
+      color: `${theme.palette.primary.main}`
+    }
+  },
+  selected: {
+    color: `${theme.palette.primary.main}`,
+    fontWeight: 'bold'
+  },
+  friendSearch: {
+    maxHeight: '25vh',
+    overflowY: 'scroll',
+    overflowX: 'hidden',
+    margin: '10px 0'
   }
-});
+}));
 
 const AddFriend = ({ isShowingAddFriend }) => {
   const dispatch = useDispatch();
-  const [email, setEmail] = useState('');
-  const [getUser, { data }] = useLazyQuery(USER_SEARCH);
+  const currentFriends = useSelector(({ reducers }) => reducers.yourFriends);
+  const [user, setUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState('');
+  const [potentialFriends, setPotentialFriends] = useState([]);
+  const [filteredPotentialFriends, setFilteredPotentialFriends] = useState([]);
+  const { data } = useQuery(GET_ALL_USERS);
   const [friendRequest, _] = useMutation(FRIEND_REQUEST);
 
   const handleAddFriendContainer = e => {
@@ -31,7 +52,7 @@ const AddFriend = ({ isShowingAddFriend }) => {
     friendRequest({
       variables: {
         friend1Id: parseInt(localStorage.getItem(USER_ID)),
-        friend2Id: parseInt(data.user.id)
+        friend2Id: parseInt(selectedUser)
       },
       refetchQueries: [{
         query: GET_RECENT_ACTIVITY,
@@ -41,12 +62,64 @@ const AddFriend = ({ isShowingAddFriend }) => {
     dispatch(handleShowAddFriends(isShowingAddFriend));
   };
 
+  const handleFilterFriends = e => {
+    setUser(e.target.value);
+    const filteredPotentialFriends = potentialFriends.filter(friend => {
+      return friend.email.includes(user) || friend.fullName.includes(user);
+    });
+    setFilteredPotentialFriends(filteredPotentialFriends);
+  };
+
+  const potentialFriendList = () => {
+    if (user.length) {
+      return filteredPotentialFriends.map(friend => {
+        return (
+          <tr key={friend.id}
+            className={selectedUser === friend.id ? classes.selected : classes.notSelected}
+            onClick={() => {
+              setSelectedUser(friend.id)
+            }}
+          >
+            <td>{friend.firstName}</td>
+            <td>{friend.lastName}</td>
+          </tr>
+        )
+      });
+    } else {
+      return potentialFriends.map(friend => {
+        return (
+          <tr key={friend.id}
+            className={selectedUser === friend.id ? classes.selected : classes.notSelected}
+            onClick={() => {
+              setSelectedUser(friend.id)
+            }}
+          >
+            <td>{friend.firstName}</td>
+            <td>{friend.lastName}</td>
+          </tr>
+        )
+      });
+    }
+  };
+
   useEffect(() => {
     if (data) {
-      console.log(email);
-      console.log(data);
+      const allUsers = [];
+      data.getAllUsers.forEach(user => {
+        const isFriend = currentFriends.find(friend => friend.id === user.id);
+        if (!isFriend && user.id !== localStorage.getItem(USER_ID)) {
+          const userObj = {};
+          userObj.fullName = `${user.firstName} ${user.lastName}`;
+          userObj.firstName = user.firstName;
+          userObj.lastName = user.lastName;
+          userObj.email = user.email;
+          userObj.id = user.id;
+          allUsers.push(userObj);
+        }
+      });
+      setPotentialFriends(allUsers);
     }
-  }, [data, email, setEmail]);
+  }, [data]);
 
   const classes = useStyles();
   return (
@@ -55,12 +128,12 @@ const AddFriend = ({ isShowingAddFriend }) => {
         <TextField
           size='small'
           id="standard-search"
-          label="Enter email"
-          type="Email"
-          value={email}
-          onChange={e => setEmail(e.target.value)}
+          label="Enter name or email"
+          type="text"
+          value={user}
+          onChange={handleFilterFriends}
         />
-        <Button
+        {/* <Button
           onClick={() => getUser({ variables: { email } })}
           size='small'
           variant='contained'
@@ -68,24 +141,25 @@ const AddFriend = ({ isShowingAddFriend }) => {
           className={classes.container}
         >
           Search
-        </Button>
+        </Button> */}
       </Box>
-      {data && data.user &&
-        <Box display='flex' flexDirection='column'>
-          <table>
-            <thead>
-              <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>{data.user.firstName}</td>
-                <td>{data.user.lastName}</td>
-              </tr>
-            </tbody>
-          </table>
+      <Box
+        display='flex'
+        flexDirection='column'
+        className={classes.friendSearch}
+      >
+        <table>
+          <thead>
+            <tr>
+              <th>First Name</th>
+              <th>Last Name</th>
+            </tr>
+          </thead>
+          <tbody>
+            {potentialFriendList()}
+          </tbody>
+        </table>
+        {selectedUser &&
           <Button
             onClick={handleAddFriend}
             size='small'
@@ -95,8 +169,8 @@ const AddFriend = ({ isShowingAddFriend }) => {
           >
             Add Friend
           </Button>
-        </Box>
-      }
+        }
+      </Box>
     </Box >
   );
 };
