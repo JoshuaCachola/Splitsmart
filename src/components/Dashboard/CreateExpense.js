@@ -18,7 +18,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { CREATE_EXPENSE, CREATE_TRANSACTION } from '../../gql/mutations';
 import { USER_ID } from '../../utils/constants';
 import FriendsList from './FriendsList';
-import { handleShowSplitExpense } from '../../redux-store/actions';
+import {
+  handleShowSplitExpense,
+  handleFriendsSplitExpense
+} from '../../redux-store/actions';
 import {
   GET_ACTIVE_TRANSACTIONS,
   GET_EXPENSE_TRANSACTIONS,
@@ -57,7 +60,7 @@ const CreateExpense = () => {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
   const [createTransaction] = useMutation(CREATE_TRANSACTION);
-  const [createExpense, { loading, error }] = useMutation(CREATE_EXPENSE, {
+  const [createExpense, _] = useMutation(CREATE_EXPENSE, {
     onCompleted({ createExpense }) {
       // console.log('in expense mutation', createExpense.expense.id);
       // setExpenseId(createExpense.expense.id);
@@ -85,58 +88,30 @@ const CreateExpense = () => {
         }]
       });
       friends.forEach(friend => {
-        if (friend.friend1.id === parseInt(localStorage.getItem(USER_ID))) {
-          createTransaction({
-            variables: {
-              userId: friend.friend1.id,
-              amount: (amount / (friends.length + 1)).toFixed(2),
-              expenseId: createExpense.expense.id
-            },
-            refetchQueries: [{
-              query: GET_RECENT_ACTIVITY,
-              variables: { userId: localStorage.getItem(USER_ID) }
-            }, {
-              query: GET_ACTIVE_TRANSACTIONS,
-              variables: { userId: localStorage.getItem(USER_ID) }
-            }, {
-              query: GET_EXPENSE_TRANSACTIONS,
-              variables: { expenseId: createExpense.expense.id }
-            }, {
-              query: GET_EXPENSE_COMMENTS,
-              variables: { expenseId: createExpense.expense.id }
-            }, {
-              query: ACTIVE_EXPENSES,
-              variables: { userId: localStorage.getItem(USER_ID) }
-            }]
-          });
-        } else {
-          createTransaction({
-            variables: {
-              userId: friend.friend2.id,
-              amount: (amount / (friends.length + 1)).toFixed(2),
-              expenseId: createExpense.expense.id
-            },
-            refetchQueries: [{
-              query: GET_RECENT_ACTIVITY,
-              variables: { userId: localStorage.getItem(USER_ID) }
-            }, {
-              query: GET_ACTIVE_TRANSACTIONS,
-              variables: { userId: localStorage.getItem(USER_ID) }
-            }, {
-              query: GET_EXPENSE_TRANSACTIONS,
-              variables: { expenseId: createExpense.expense.id }
-            }, {
-              query: GET_EXPENSE_COMMENTS,
-              variables: { expenseId: createExpense.expense.id }
-            }, {
-              query: ACTIVE_EXPENSES,
-              variables: { userId: localStorage.getItem(USER_ID) }
-            }]
-          });
-        }
+        createTransaction({
+          variables: {
+            userId: friend.id,
+            amount: (amount / (friends.length + 1)).toFixed(2),
+            expenseId: createExpense.expense.id
+          },
+          refetchQueries: [{
+            query: GET_RECENT_ACTIVITY,
+            variables: { userId: localStorage.getItem(USER_ID) }
+          }, {
+            query: GET_ACTIVE_TRANSACTIONS,
+            variables: { userId: localStorage.getItem(USER_ID) }
+          }, {
+            query: GET_EXPENSE_TRANSACTIONS,
+            variables: { expenseId: createExpense.expense.id }
+          }, {
+            query: GET_EXPENSE_COMMENTS,
+            variables: { expenseId: createExpense.expense.id }
+          }, {
+            query: ACTIVE_EXPENSES,
+            variables: { userId: localStorage.getItem(USER_ID) }
+          }]
+        });
       });
-
-
     }
   });
 
@@ -155,6 +130,7 @@ const CreateExpense = () => {
 
 
   const handleClose = () => {
+    dispatch(handleFriendsSplitExpense([]));
     dispatch(handleShowSplitExpense(isShowing));
   };
 
@@ -179,21 +155,25 @@ const CreateExpense = () => {
         <DialogContent>
           <Box width='100%'>
             <Box className={classes.inputContainer}>
-              <InputLabel id="expense-description-label">Description</InputLabel>
-              <TextField
-                type='text'
-                value={description}
-                onChange={e => setDescription(e.target.value)}
-                fullWidth={true}
-              />
-              <InputLabel>Amount</InputLabel>
-              <TextField
-                type='text'
-                value={amount}
-                placeholder='$0.00'
-                onChange={e => setAmount(e.target.value)}
-                fullWidth={true}
-              />
+              <Box pb={1}>
+                <InputLabel id="expense-description-label">Description</InputLabel>
+                <TextField
+                  type='text'
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  fullWidth={true}
+                />
+              </Box>
+              <Box pb={1}>
+                <InputLabel>Amount</InputLabel>
+                <TextField
+                  type='text'
+                  value={amount}
+                  placeholder='$0.00'
+                  onChange={e => setAmount(e.target.value)}
+                  fullWidth={true}
+                />
+              </Box>
               <Box>
                 <h2 className={classes.friendsHeader}>Friends to add to expense</h2>
               </Box>

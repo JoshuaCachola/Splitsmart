@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Box, makeStyles, Avatar, Button } from '@material-ui/core';
-import { USER_ID } from '../../utils/constants';
 
 import { theme } from '../../theme';
-import { friendsSplitExpense } from '../../redux-store/actions';
+import { handleFriendsSplitExpense } from '../../redux-store/actions';
 
 const useStyles = makeStyles({
   bold: {
@@ -36,12 +35,15 @@ const FriendsList = ({ friendsList, remove }) => {
     if (friendsList) {
       return;
     }
-    const idx = e.currentTarget.id;
-    dispatch(friendsSplitExpense([...friendsExpense, friends[idx]]));
+    const id = e.currentTarget.id;
+    const foundFriend = friends.find(friend => friend.id === id);
+    if (friendsExpense.indexOf(foundFriend) === -1) {
+      dispatch(handleFriendsSplitExpense([...friendsExpense, foundFriend]));
+    }
   };
   const handleRemoveFriends = e => {
-    const idx = e.currentTarget.id;
-    dispatch(friendsSplitExpense(friendsExpense.filter(obj => obj === friends[idx])));
+    const id = e.currentTarget.id;
+    dispatch(handleFriendsSplitExpense(friends, id));
   }
 
   useEffect(() => {
@@ -51,60 +53,35 @@ const FriendsList = ({ friendsList, remove }) => {
       setFriends(friendList);
     }
   }, [friendsList]);
+
   const classes = useStyles();
   return (
     <Box display='flex' flexDirection='column'>
       {friends &&
         friends.map((friend, i) => {
-          if (friend.friend1.id === localStorage.getItem(USER_ID)) {
-            return (
-              <Box
-                key={i}
-                id={i}
-                className={classes.container}
-                onClick={handleChooseFriend}
-                height={30}
-              >
-                <Box display='flex' alignItems='center'>
-                  <Avatar className={classes.avatar}>GL</Avatar>
-                </Box>
-                <Box className={classes.container}>
-                  <Box className={classes.bold}>
-                    {friend.friend2.firstName} {friend.friend2.lastName}
-                  </Box>
-                </Box>
-                <Box>
-                  {friendsList && !remove &&
-                    <Button color='secondary' onClick={handleRemoveFriends}>Clear list</Button>
-                  }
+          return (
+            <Box
+              key={i}
+              id={friend.id}
+              className={classes.container}
+              onClick={handleChooseFriend}
+              height={30}
+            >
+              <Box>
+                <Avatar className={classes.avatar}>GL</Avatar>
+              </Box>
+              <Box className={classes.container}>
+                <Box className={classes.bold}>
+                  {friend.firstName} {friend.lastName}
                 </Box>
               </Box>
-            )
-          } else {
-            return (
-              <Box
-                key={i}
-                id={i}
-                className={classes.container}
-                onClick={handleChooseFriend}
-                height={30}
-              >
-                <Box>
-                  <Avatar className={classes.avatar}>GL</Avatar>
-                </Box>
-                <Box className={classes.container}>
-                  <Box className={classes.bold}>
-                    {friend.friend1.firstName} {friend.friend1.lastName}
-                  </Box>
-                </Box>
-                <Box>
-                  {friendsList && !remove &&
-                    <Button onClick={handleRemoveFriends}>X</Button>
-                  }
-                </Box>
+              <Box>
+                {friendsList && !remove &&
+                  <Button id={friend.id} onClick={handleRemoveFriends}>X</Button>
+                }
               </Box>
-            )
-          }
+            </Box>
+          )
         })
       }
     </Box>

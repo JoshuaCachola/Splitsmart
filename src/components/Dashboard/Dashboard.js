@@ -8,7 +8,7 @@ import MiddleContainer from './middleContainer/MiddleContainer';
 import LeftContainer from './leftContainer/LeftContainer';
 import RightContainer from './rightContainer/RightContainer';
 import { GET_FRIENDS } from '../../gql/queries';
-import { USER_ID, AUTH_TOKEN } from '../../utils/constants';
+import { USER_ID } from '../../utils/constants';
 import { handleStoreFriends } from '../../redux-store/actions';
 
 const useStyles = makeStyles({
@@ -16,20 +16,20 @@ const useStyles = makeStyles({
     boxShadow: '0 0 12px rgba(0,0,0,0.2)',
     minHeight: '100vh'
   },
-  container: {}
 });
 
 const Dashboard = () => {
   const dispatch = useDispatch();
+  const userId = localStorage.getItem(USER_ID);
   const { data } = useQuery(GET_FRIENDS, {
     variables: {
-      friendId: localStorage.getItem(USER_ID)
+      friendId: userId
     }
   });
 
   useEffect(() => {
     if (data) {
-      dispatch(handleStoreFriends(data.getFriends));
+      dispatch(handleStoreFriends(data.getFriends, userId));
     }
   }, [data]);
 
@@ -37,7 +37,7 @@ const Dashboard = () => {
   return (
     <>
       <Navbar />
-      <Box display='flex' className={classes.container}>
+      <Box display='flex'>
         {/* Left menu */}
         <Box flexBasis='30%'>
           <LeftContainer />

@@ -22,7 +22,6 @@ const AddFriend = ({ isShowingAddFriend }) => {
 
   const handleAddFriendContainer = e => {
     e.preventDefault();
-    console.log(e.target.tagName);
     if (e.target.tagName === 'DIV') {
       dispatch(handleShowAddFriends(isShowingAddFriend));
     }

@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     color: '#333333'
   },
   button: {
-    width: '30%',
+    width: '80px',
     marginTop: '20px'
   }
 });
@@ -65,6 +65,7 @@ const Login = ({ history }) => {
             type='email'
             value={email}
             onChange={e => setEmail(e.target.value)}
+            required
           />
         </Box>
         <Box display='flex' flexDirection='column' className={classes.container}>
@@ -74,6 +75,7 @@ const Login = ({ history }) => {
             type='password'
             value={password}
             onChange={e => setPassword(e.target.value)}
+            required
           />
         </Box>
         <Box display='flex' flexDirection='column' className={classes.button}>

@@ -1,10 +1,10 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
+import { Box, Container } from '@material-ui/core';
 import { withStyles } from '@material-ui/styles';
 import Friends from './Friends';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { theme } from '../../../theme';
+// import { theme } from '../../../theme';
 import {
   handleShowDashboard,
   handleShowRecentActivity,
@@ -13,11 +13,11 @@ import {
 
 const styles = {
   leftContainer: {
-    marginTop: '11px',
-    marginLeft: '230px',
-    maxWidth: '50%',
+    marginLeft: 'auto',
+    width: '45%',
     display: 'flex',
     flexDirection: 'column',
+    justifyContent: 'flex-end'
   },
   navigation: {
     width: '172px',
@@ -93,7 +93,7 @@ const LeftContainer = (props) => {
 
   const { classes } = props;
   return (
-    <Box className={classes.leftContainer}>
+    <Box m={1} className={classes.leftContainer}>
       <Box justifyContent='flex-end'>
         <Box className={classes.navigation}>
           <div

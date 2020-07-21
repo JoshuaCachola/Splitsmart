@@ -100,12 +100,21 @@ export const handleShowSplitExpense = isShowing => dispatch => {
   dispatch(showSplitExpense(!isShowing));
 };
 
-export const handleStoreFriends = friends => dispatch => {
-  dispatch(storeFriends(friends));
+export const handleStoreFriends = (friends, userId) => dispatch => {
+  const filtered_friends = [];
+  friends.forEach(({ friend1, friend2 }) => {
+    if (friend1.id !== userId) {
+      filtered_friends.push({ ...friend1 });
+    } else {
+      filtered_friends.push({ ...friend2 });
+    }
+  });
+  dispatch(storeFriends(filtered_friends));
 };
 
-export const handleFriendsSplitExpense = friends => dispatch => {
-  dispatch(friendsSplitExpense(friends));
+export const handleFriendsSplitExpense = (friends, id) => dispatch => {
+  const newFriendsList = friends.filter(friend => friend.id !== id);
+  dispatch(friendsSplitExpense(newFriendsList));
 };
 
 export const handleShowSettleUp = isShowing => dispatch => {
