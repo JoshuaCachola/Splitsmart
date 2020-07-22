@@ -49,15 +49,23 @@ const SignUp = ({ history }) => {
 
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted({ createUser }) {
-      const userId = createUser.user.id;
-      localStorage.setItem(AUTH_TOKEN, createUser.authToken);
-      localStorage.setItem(USER_ID, userId);
-      dispatch(handleDisplayUser({
-        firstName: createUser.user.firstName,
-        lastName: createUser.user.lastName
-      }))
-      dispatch(handleCurrentUserId(userId));
-      history.push('/dashboard');
+      if (createUser.authToken) {
+        const userId = createUser.user.id;
+        localStorage.setItem(AUTH_TOKEN, createUser.authToken);
+        localStorage.setItem(USER_ID, userId);
+        dispatch(handleDisplayUser({
+          firstName: createUser.user.firstName,
+          lastName: createUser.user.lastName
+        }))
+        dispatch(handleCurrentUserId(userId));
+        history.push('/dashboard');
+      } else {
+        alert(`Account already created with that email. Please try signing in or using a different email...`);
+        setName('');
+        setEmail('');
+        setPassword('');
+        setConfirmPassword('');
+      }
     }
   });
 
