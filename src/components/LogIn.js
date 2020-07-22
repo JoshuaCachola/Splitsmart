@@ -35,14 +35,18 @@ const Login = ({ history }) => {
 
   const [loginUser] = useMutation(LOGIN_USER, {
     onCompleted({ loginUser }) {
-      localStorage.setItem(AUTH_TOKEN, loginUser.authToken);
-      localStorage.setItem(USER_ID, loginUser.id);
-      dispatch(handleDisplayUser({
-        firstName: loginUser.firstName,
-        lastName: loginUser.lastName
-      }))
-      dispatch(handleCurrentUserId(loginUser.id));
-      history.push('/dashboard');
+      if (loginUser.authToken) {
+        localStorage.setItem(AUTH_TOKEN, loginUser.authToken);
+        localStorage.setItem(USER_ID, loginUser.id);
+        dispatch(handleDisplayUser({
+          firstName: loginUser.firstName,
+          lastName: loginUser.lastName
+        }))
+        dispatch(handleCurrentUserId(loginUser.id));
+        history.push('/dashboard');
+      } else {
+        alert("Please insert a valid username and password or sign up...");
+      }
     }
   });
 

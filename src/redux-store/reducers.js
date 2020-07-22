@@ -9,7 +9,8 @@ import {
   SHOW_ALL_EXPENSES,
   SHOW_SETTLE_TRANSACTION,
   DISPLAY_USER,
-  CURRENT_USER_ID
+  CURRENT_USER_ID,
+  CURRENT_TRANSACTION
 } from './actionTypes';
 
 export default function reducer(state = {
@@ -22,7 +23,8 @@ export default function reducer(state = {
   showRecentActivity: false,
   showAllExpenses: false,
   showSettleTransaction: false,
-  displayUser: {}
+  displayUser: {},
+  currentTranaction: {},
 }, action) {
   switch (action.type) {
     case SHOW_ADD_FRIENDS: {
@@ -89,6 +91,12 @@ export default function reducer(state = {
       return {
         ...state,
         currentUserId: action.id
+      }
+    }
+    case CURRENT_TRANSACTION: {
+      return {
+        ...state,
+        currentTranaction: action.transaction
       }
     }
     default: return state

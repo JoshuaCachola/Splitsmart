@@ -19,3 +19,5 @@ export const SHOW_SETTLE_TRANSACTION = 'ss/showSettleTransaction';
 export const DISPLAY_USER = 'ss/displayUser';
 
 export const CURRENT_USER_ID = 'ss/currentUserId';
+
+export const CURRENT_TRANSACTION = 'ss/currentTransaction';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useMutation, useApolloClient } from '@apollo/react-hooks';
+import { useMutation } from '@apollo/react-hooks';
 import { useDispatch } from 'react-redux';
 
 import { AUTH_TOKEN, USER_ID } from '../utils/constants';
@@ -41,7 +41,6 @@ const useStyles = makeStyles({
 });
 
 const SignUp = ({ history }) => {
-  const client = useApolloClient();
   const dispatch = useDispatch();
   const [name, setName] = useState(''),
     [email, setEmail] = useState(''),
@@ -50,13 +49,15 @@ const SignUp = ({ history }) => {
 
   const [createUser] = useMutation(CREATE_USER, {
     onCompleted({ createUser }) {
+      const userId = createUser.user.id;
       localStorage.setItem(AUTH_TOKEN, createUser.authToken);
-      localStorage.setItem(USER_ID, createUser.user.id);
-      client.writeData({ data: { isLoggedIn: true } });
+      localStorage.setItem(USER_ID, userId);
       dispatch(handleDisplayUser({
         firstName: createUser.user.firstName,
         lastName: createUser.user.lastName
       }))
+      dispatch(handleCurrentUserId(userId));
+      history.push('/dashboard');
     }
   });
 
@@ -77,7 +78,6 @@ const SignUp = ({ history }) => {
     } else {
       alert('Passwords do not match...');
     }
-    history.push('/dashboard')
   }
 
   const classes = useStyles();
@@ -88,7 +88,7 @@ const SignUp = ({ history }) => {
           <img className={classes.image} src='logo.svg' alt='logo-pic' />
         </Box>
         <Box className={classes.signUpContainer}>
-          <form onSubmit={handleSignUp} autoCompplete='off'>
+          <form onSubmit={handleSignUp} autoComplete='off'>
             <Box display='flex' flexDirection='column'>
               <div className={classes.introduction}>INTRODUCE YOURSELF</div>
               <Box display='flex' flexDirection='column'>

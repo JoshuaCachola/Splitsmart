@@ -9,18 +9,20 @@ import {
 
 import { CREATE_TRANSACTION } from '../gql/mutations';
 import { USER_ID } from '../utils/constants';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles({
 
 });
 
-const Checkout = ({ expenseId, amount }) => {
+const Checkout = () => {
   const [name, setName] = useState(''),
     [creditCard, setCreditCard] = useState(''),
     [expDate, setExpDate] = useState(''),
     [cvv, setCvv] = useState(''),
     [errors, setErrors] = useState([]);
 
+  const currentTransaction = useSelector(({ reducers }) => reducers.currentTransaction);
   const [createTransaction] = useMutation(CREATE_TRANSACTION);
 
   const handleCreateTransaction = e => {
@@ -49,8 +51,8 @@ const Checkout = ({ expenseId, amount }) => {
       createTransaction({
         variables: {
           userId: localStorage.getItem(USER_ID),
-          expenseId,
-          amount
+          expenseId: currentTransaction.expenseId,
+          amount: currentTransaction.amount
         }
       });
     }

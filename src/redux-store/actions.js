@@ -9,7 +9,8 @@ import {
   SHOW_ALL_EXPENSES,
   SHOW_SETTLE_TRANSACTION,
   DISPLAY_USER,
-  CURRENT_USER_ID
+  CURRENT_USER_ID,
+  CURRENT_TRANSACTION
 } from './actionTypes';
 
 import { FIRST_NAME, LAST_NAME } from '../utils/constants';
@@ -91,6 +92,13 @@ export const currentUserId = id => {
   };
 };
 
+export const currentTransaction = transaction => {
+  return {
+    type: CURRENT_TRANSACTION,
+    transaction
+  };
+};
+
 // thunks
 export const handleShowAddFriends = isShowing => dispatch => {
   dispatch(showAddFriends(!isShowing));
@@ -145,4 +153,8 @@ export const handleDisplayUser = user => dispatch => {
 
 export const handleCurrentUserId = id => dispatch => {
   dispatch(currentUserId(id));
+};
+
+export const handleCurrentTransaction = transaction => dispatch => {
+  dispatch(currentTransaction(transaction));
 };
