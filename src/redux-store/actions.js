@@ -10,10 +10,11 @@ import {
   SHOW_SETTLE_TRANSACTION,
   DISPLAY_USER,
   CURRENT_USER_ID,
-  CURRENT_TRANSACTION
+  CURRENT_TRANSACTION,
+  PAYMENT_TYPE
 } from './actionTypes';
 
-import { FIRST_NAME, LAST_NAME } from '../utils/constants';
+import { FIRST_NAME, LAST_NAME, CHECKOUT_PAYMENT_TYPE } from '../utils/constants';
 // action creators
 export const showAddFriends = isShowing => {
   return {
@@ -99,6 +100,13 @@ export const currentTransaction = transaction => {
   };
 };
 
+export const paymentType = paymentType => {
+  return {
+    type: PAYMENT_TYPE,
+    paymentType
+  };
+};
+
 // thunks
 export const handleShowAddFriends = isShowing => dispatch => {
   dispatch(showAddFriends(!isShowing));
@@ -157,4 +165,9 @@ export const handleCurrentUserId = id => dispatch => {
 
 export const handleCurrentTransaction = transaction => dispatch => {
   dispatch(currentTransaction(transaction));
+};
+
+export const handlePaymentType = type => dispatch => {
+  localStorage.setItem(CHECKOUT_PAYMENT_TYPE, type);
+  dispatch(paymentType(type));
 };

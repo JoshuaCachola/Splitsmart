@@ -1,25 +1,21 @@
 import React from 'react';
+import { withRouter } from 'react-router';
 import { useMutation } from '@apollo/react-hooks';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   makeStyles,
   Button,
   Box,
-  TextField,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem,
   Paper
 } from '@material-ui/core';
 
-import { handleShowSettleTransaction } from '../../../redux-store/actions';
+import { handleShowSettleTransaction, handlePaymentType } from '../../../redux-store/actions';
 import { HANDLE_TRANSACTION } from '../../../gql/mutations';
-import { USER_ID } from '../../../utils/constants';
+import { USER_ID, VENMO, PAYPAL } from '../../../utils/constants';
 import { GET_RECENT_ACTIVITY, GET_ACTIVE_TRANSACTIONS } from '../../../gql/queries';
 
 const useStyles = makeStyles({
@@ -34,16 +30,18 @@ const useStyles = makeStyles({
   image: {
     width: '50%'
   },
-  button: {
+  venmoButton: {
     backgroundColor: '#3d95ce',
-    borderRadius: '5px'
+    borderRadius: '5px',
+    cursor: 'pointer'
   },
-  buttons: {
-    margin: '5px'
+  paypalButton: {
+    margin: '5px',
+    cursor: 'pointer'
   }
 });
 
-const SettleTransaction = ({ id }) => {
+const SettleTransaction = ({ id, history }) => {
   const dispatch = useDispatch();
   const isSettleTransaction = useSelector(({ reducers }) => reducers.showSettleTransaction);
 
@@ -70,6 +68,17 @@ const SettleTransaction = ({ id }) => {
       }
     });
     handleClose();
+  };
+
+  const handleOnlinePayment = e => {
+    const type = e.currentTarget.name;
+    if (type === PAYPAL) {
+      dispatch(handlePaymentType(PAYPAL));
+    } else {
+      dispatch(handlePaymentType(VENMO));
+    }
+
+    history.push('/checkout');
   };
 
   const classes = useStyles();
@@ -106,13 +115,17 @@ const SettleTransaction = ({ id }) => {
             </Button>
             <Button
               variant='outlined'
-              className={classes.buttons}
+              className={classes.paypalButton}
+              onClick={handleOnlinePayment}
+              name='paypal'
             >
               <img className={classes.image} src='paypal.png' alt='paypal' />
             </Button>
             <button
               variant='contained'
-              className={classes.button}
+              className={classes.venmoButton}
+              onClick={handleOnlinePayment}
+              name='venmo'
             >
               <img className={classes.image} src='venmo.png' alt='venmo' />
             </button>
@@ -142,4 +155,4 @@ const SettleTransaction = ({ id }) => {
   );
 };
 
-export default SettleTransaction;
+export default withRouter(SettleTransaction);

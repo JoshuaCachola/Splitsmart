@@ -10,7 +10,8 @@ import {
   SHOW_SETTLE_TRANSACTION,
   DISPLAY_USER,
   CURRENT_USER_ID,
-  CURRENT_TRANSACTION
+  CURRENT_TRANSACTION,
+  PAYMENT_TYPE
 } from './actionTypes';
 
 export default function reducer(state = {
@@ -97,6 +98,12 @@ export default function reducer(state = {
       return {
         ...state,
         currentTranaction: action.transaction
+      }
+    }
+    case PAYMENT_TYPE: {
+      return {
+        ...state,
+        paymentType: action.paymentType
       }
     }
     default: return state
