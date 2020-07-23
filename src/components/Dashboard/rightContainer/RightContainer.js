@@ -29,9 +29,10 @@ const useStyles = makeStyles({
     }
   },
   personalLinks: {
+    position: 'sticky',
     display: 'flex',
     justifyContent: 'space-around',
-    height: '80%',
+    height: '70%',
   },
 })
 const RightContainer = () => {

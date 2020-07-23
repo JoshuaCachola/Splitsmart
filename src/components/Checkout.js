@@ -35,7 +35,7 @@ const useStyles = makeStyles({
     display: 'flex',
     flexDirection: 'column',
     marginTop: '100px',
-    width: '125%',
+    width: '35%',
   },
   paypalLogo: {
     width: '25%',
@@ -54,6 +54,11 @@ const useStyles = makeStyles({
     backgroundColor: '#3d95ce',
     color: '#FFFFFF'
   },
+  paymentHeader: {
+    fontWeight: 'bold',
+    fontSize: '18px',
+    textAlign: 'center'
+  },
   // inputColor: {
   //   '&:focus': {
   //     color: '#3d95ce'
@@ -62,7 +67,7 @@ const useStyles = makeStyles({
   paymentDetails: {
     backgroundColor: '#FAFAFA',
     width: '350px',
-    height: '200px',
+    height: '210px',
     margin: 'auto 0',
     display: 'flex',
     flexDirection: 'column'
@@ -74,6 +79,7 @@ const useStyles = makeStyles({
     display: 'flex',
     margin: 'auto 20px',
     justifyContent: 'space-between',
+    borderBottom: '1px solid #ECECEC'
   }
 });
 
@@ -147,8 +153,8 @@ const Checkout = () => {
     <div className={classes.root}>
       {checkoutLogo()}
       <Container className={classes.checkoutContainer}>
-        <form>
-          <Box className={classes.paymentContainer}>
+        <Box className={classes.paymentContainer}>
+          <form>
             <Box mb={3} display='flex' justifyContent='space-between'>
               <InputLabel className={classes.label}>Name on card</InputLabel>
               <TextField
@@ -197,9 +203,10 @@ const Checkout = () => {
                 }}
               />
             </Box>
-          </Box>
-        </form>
+          </form>
+        </Box>
         <Paper className={classes.paymentDetails}>
+          <h2 className={classes.paymentHeader}>Transaction Details</h2>
           <Box className={classes.paymentTextContainer}>
             <div className={classes.paymentText}>Payment to:</div>
             <div>Joshua Cachola</div>

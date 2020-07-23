@@ -35,9 +35,15 @@ const PersonalLinks = () => {
     <Container className={classes.linksContainer}>
       {/* <Container>Personal Links</Container> */}
       <Container className={classes.linkIcons}>
-        <GitHubIcon className={classes.icons} />
-        <LinkedInIcon className={classes.icons} />
-        <WebIcon className={classes.icons} />
+        <a href='https://github.com/JoshuaCachola/Splitsmart'>
+          <GitHubIcon className={classes.icons} />
+        </a>
+        <a href='https://www.linkedin.com/in/joshua-cachola-b6bab9194/'>
+          <LinkedInIcon className={classes.icons} />
+        </a>
+        <a href='https://joshuacachola.github.io/'>
+          <WebIcon className={classes.icons} />
+        </a>
       </Container>
       <Container className={classes.developerHeader}>Developed by - Joshua Cachola</Container>
     </Container>
